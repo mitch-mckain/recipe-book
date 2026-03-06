@@ -16,6 +16,17 @@ function useLocalStorage(key, defaultValue) {
   return [value, setValue];
 }
 
+/* ─── MOBILE DETECTION ───────────────────────────────────── */
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+  return isMobile;
+}
+
 /* ─── SPICE BLENDS ─────────────────────────────────────── */
 const spiceBlends = [
   {
@@ -37,10 +48,8 @@ const spiceBlends = [
       { spice: "Cayenne pepper", single: "¼ tsp", bulk: "2 tsp" },
       { spice: "Fine salt", single: "½ tsp", bulk: "4 tsp (1⅓ tbsp)" },
     ],
-    bulkNote:
-      "Bulk batch fills a standard 250ml mason jar. Use 2 tbsp per 500g of meat. Keeps 6 months in a cool, dark cupboard.",
-    whereToBuy:
-      "Buy chili powder, cumin, and smoked paprika in bulk bags at Bulk Barn or Costco — 70% cheaper than small jars. The sweet spot is buying dried chilies whole and grinding them, but the powder version is perfectly legit.",
+    bulkNote: "Bulk batch fills a standard 250ml mason jar. Use 2 tbsp per 500g of meat. Keeps 6 months in a cool, dark cupboard.",
+    whereToBuy: "Buy chili powder, cumin, and smoked paprika in bulk bags at Bulk Barn or Costco — 70% cheaper than small jars. The sweet spot is buying dried chilies whole and grinding them, but the powder version is perfectly legit.",
   },
   {
     id: 2,
@@ -61,10 +70,8 @@ const spiceBlends = [
       { spice: "Cayenne (optional)", single: "⅛ tsp", bulk: "1 tsp" },
       { spice: "Fine salt", single: "½ tsp", bulk: "4 tsp (1⅓ tbsp)" },
     ],
-    bulkNote:
-      "Fills a ~200ml jar. Use 2 tbsp per 500g of meat. The brown sugar helps with crust when pan-searing or grilling — don't skip it.",
-    whereToBuy:
-      "Chipotle powder is in the Mexican food section at most grocery stores, or very cheap online. Ancho chili powder makes a great milder substitute.",
+    bulkNote: "Fills a ~200ml jar. Use 2 tbsp per 500g of meat. The brown sugar helps with crust when pan-searing or grilling — don't skip it.",
+    whereToBuy: "Chipotle powder is in the Mexican food section at most grocery stores, or very cheap online. Ancho chili powder makes a great milder substitute.",
   },
   {
     id: 3,
@@ -85,10 +92,8 @@ const spiceBlends = [
       { spice: "Chili flakes", single: "¼ tsp", bulk: "2 tsp" },
       { spice: "Fine salt", single: "½ tsp", bulk: "4 tsp (1⅓ tbsp)" },
     ],
-    bulkNote:
-      "Crush dried rosemary between your fingers before mixing — releases the oils. Store in 200ml jar, lasts 6 months. Use 1.5 tbsp per 500g of meat.",
-    whereToBuy:
-      "All standard grocery staples. Buying loose dried herbs at a bulk food store is significantly cheaper than branded jars.",
+    bulkNote: "Crush dried rosemary between your fingers before mixing — releases the oils. Store in 200ml jar, lasts 6 months. Use 1.5 tbsp per 500g of meat.",
+    whereToBuy: "All standard grocery staples. Buying loose dried herbs at a bulk food store is significantly cheaper than branded jars.",
   },
   {
     id: 4,
@@ -107,10 +112,8 @@ const spiceBlends = [
       { spice: "Onion powder", single: "½ tsp", bulk: "4 tsp (1⅓ tbsp)" },
       { spice: "Chili flakes", single: "½ tsp", bulk: "4 tsp (1⅓ tbsp)" },
     ],
-    bulkNote:
-      "Makes a smaller batch (~150ml jar) — sesame seeds go rancid faster than dried spices so don't go too big. Keeps 3 months. Use 1 tbsp per 500g of meat.",
-    whereToBuy:
-      "Find gochujang at any Asian grocery store or H-Mart for a fraction of the price vs. mainstream grocery. A 500g tub costs ~$4 and lasts months in the fridge.",
+    bulkNote: "Makes a smaller batch (~150ml jar) — sesame seeds go rancid faster than dried spices so don't go too big. Keeps 3 months. Use 1 tbsp per 500g of meat.",
+    whereToBuy: "Find gochujang at any Asian grocery store or H-Mart for a fraction of the price vs. mainstream grocery. A 500g tub costs ~$4 and lasts months in the fridge.",
   },
 ];
 
@@ -482,7 +485,6 @@ const recipes = [
 
 /* ─── STOCK & INVENTORY ─────────────────────────────────── */
 const STOCK_COLORS = { 0: "#e0e0e0", 1: "#e74c3c", 2: "#f39c12", 3: "#2ecc71", 4: "#27ae60" };
-const STOCK_LABELS = { 0: "Empty", 1: "Low (buy this week)", 2: "Half (auto-checked)", 3: "Good (auto-checked)", 4: "Full (auto-checked)" };
 const STOCK_SHORT  = { 0: "Empty", 1: "Low", 2: "Half", 3: "Good", 4: "Full" };
 
 function getAllIngredients() {
@@ -501,26 +503,20 @@ function getAllIngredients() {
 }
 
 /* ─── HELPERS ────────────────────────────────────────────── */
-
-// Tries to sum quantities like "700g"+"800g"→"1500g", "4 cloves"+"3 cloves"→"7 cloves"
 function sumQuantity(amounts) {
   if (amounts.length === 1) return amounts[0];
   const unique = [...new Set(amounts)];
-  if (unique.length === 1) return unique[0]; // identical, just show once
-
+  if (unique.length === 1) return unique[0];
   const tryParse = (s) => {
-    // metric with no space: "700g", "300g dry", "500ml", "700ml jar"
     let m = s.match(/^(\d+(?:\.\d+)?)\s*(g|kg|ml|l)(\s+\w+)?$/i);
     if (m) return { num: parseFloat(m[1]), unit: m[2], suffix: (m[3] || "").trim() };
-    // word unit: "4 cloves", "2 limes", "3 stalks", "1 can"
     m = s.match(/^(\d+)\s+(\w+)$/i);
     if (m) return { num: parseFloat(m[1]), unit: m[2], suffix: "" };
     return null;
   };
-
   const parsed = amounts.map(tryParse);
   if (parsed.every((p) => p !== null)) {
-    const base = (u) => u.toLowerCase().replace(/s$/, ""); // normalize plural
+    const base = (u) => u.toLowerCase().replace(/s$/, "");
     const sameUnit = new Set(parsed.map((p) => base(p.unit))).size === 1;
     const sameSuffix = new Set(parsed.map((p) => p.suffix)).size === 1;
     if (sameUnit && sameSuffix) {
@@ -535,19 +531,16 @@ function sumQuantity(amounts) {
 
 function buildGrouped(selectedIds) {
   const map = {};
-  recipes
-    .filter((r) => selectedIds.includes(r.id))
-    .forEach((r) => {
-      r.ingredients.forEach((ing) => {
-        if (!map[ing.item]) {
-          map[ing.item] = { ...ing, amounts: [ing.amount], inRecipes: [r.name] };
-        } else if (!map[ing.item].inRecipes.includes(r.name)) {
-          map[ing.item].inRecipes.push(r.name);
-          map[ing.item].amounts.push(ing.amount);
-        }
-      });
+  recipes.filter((r) => selectedIds.includes(r.id)).forEach((r) => {
+    r.ingredients.forEach((ing) => {
+      if (!map[ing.item]) {
+        map[ing.item] = { ...ing, amounts: [ing.amount], inRecipes: [r.name] };
+      } else if (!map[ing.item].inRecipes.includes(r.name)) {
+        map[ing.item].inRecipes.push(r.name);
+        map[ing.item].amounts.push(ing.amount);
+      }
     });
-  // Resolve combined amounts
+  });
   Object.values(map).forEach((ing) => {
     ing.combined = ing.amounts.length > 1;
     ing.amount = sumQuantity(ing.amounts);
@@ -569,9 +562,7 @@ function formatForShare(selectedIds, grouped, inventory) {
     const needToBuy = grouped[cat].filter((ing) => getStock(ing.item) < 2);
     if (needToBuy.length === 0) return;
     text += `${icon} ${label}\n`;
-    needToBuy.forEach((ing) => {
-      text += `□ ${ing.item} — ${ing.amount}\n`;
-    });
+    needToBuy.forEach((ing) => { text += `□ ${ing.item} — ${ing.amount}\n`; });
     text += "\n";
   });
   const inPantryItems = Object.values(grouped).flat().filter((ing) => getStock(ing.item) >= 2);
@@ -584,577 +575,524 @@ function formatForShare(selectedIds, grouped, inventory) {
 
 /* ─── APP ────────────────────────────────────────────────── */
 export default function App() {
+  const isMobile = useIsMobile();
+
   const [view, setView] = useState("home");
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [copied, setCopied] = useState(false);
   const [blendMode, setBlendMode] = useState("single");
   const [selectedBlend, setSelectedBlend] = useState(null);
 
-  // ── Persisted state (survives page refresh & works across devices on same browser) ──
   const [checked, setChecked] = useLocalStorage("rb_checked", {});
   const [selectedIds, setSelectedIds] = useLocalStorage("rb_selectedIds", recipes.map((r) => r.id));
   const [inventory, setInventory] = useLocalStorage("rb_inventory", {});
 
-  const getStock  = (item) => inventory[item] || 0;
-  const setStock  = (item, level) => setInventory((p) => ({ ...p, [item]: level }));
-
+  const getStock = (item) => inventory[item] || 0;
+  const setStock = (item, level) => setInventory((p) => ({ ...p, [item]: level }));
   const grouped = buildGrouped(selectedIds);
 
   const handleShare = async () => {
     const text = formatForShare(selectedIds, grouped, inventory);
     if (navigator.share) {
-      try {
-        await navigator.share({ title: "Mitch's Grocery List", text });
-        return;
-      } catch {}
+      try { await navigator.share({ title: "Mitch's Grocery List", text }); return; } catch {}
     }
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
+    try { await navigator.clipboard.writeText(text); }
+    catch {
       const el = document.createElement("textarea");
-      el.value = text;
-      document.body.appendChild(el);
-      el.select();
-      document.execCommand("copy");
-      document.body.removeChild(el);
+      el.value = text; document.body.appendChild(el); el.select();
+      document.execCommand("copy"); document.body.removeChild(el);
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
 
   const navItems = [
-    { id: "home", label: "🍽 Recipes" },
-    { id: "shopping", label: "🛒 Shopping" },
-    { id: "pantry", label: "🥫 Pantry" },
-    { id: "spices", label: "🌶 Spice Blends" },
+    { id: "home",     label: "🍽 Recipes",     emoji: "🍽", short: "Recipes"  },
+    { id: "shopping", label: "🛒 Shopping",    emoji: "🛒", short: "Shopping" },
+    { id: "pantry",   label: "🥫 Pantry",      emoji: "🥫", short: "Pantry"   },
+    { id: "spices",   label: "🌶 Spice Blends", emoji: "🌶", short: "Spices"   },
   ];
+
+  const navigate = (id) => { setView(id); setSelectedRecipe(null); setSelectedBlend(null); };
 
   return (
     <div style={{ fontFamily: "'Inter', sans-serif", background: "#f5f2ec", minHeight: "100vh" }}>
-      {/* NAV */}
-      <div
-        style={{
-          background: "#1a1a1a",
-          color: "white",
-          padding: "14px 24px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-        }}
-      >
+
+      {/* ── TOP NAV ── */}
+      <div style={{
+        background: "#1a1a1a", color: "white",
+        padding: isMobile ? "12px 16px" : "14px 24px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        position: "sticky", top: 0, zIndex: 100,
+      }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ fontSize: "26px" }}>📖</span>
+          <span style={{ fontSize: isMobile ? "22px" : "26px" }}>📖</span>
           <div>
-            <div style={{ fontSize: "18px", fontWeight: "700" }}>Mitch's Recipe Book</div>
-            <div style={{ fontSize: "11px", color: "#777" }}>10 High-Protein Meals · 4 Custom Spice Blends</div>
+            <div style={{ fontSize: isMobile ? "15px" : "18px", fontWeight: "700" }}>Mitch's Recipe Book</div>
+            {!isMobile && <div style={{ fontSize: "11px", color: "#777" }}>10 High-Protein Meals · 4 Custom Spice Blends</div>}
           </div>
         </div>
-        <div style={{ display: "flex", gap: "6px" }}>
-          {navItems.map((n) => (
-            <button
-              key={n.id}
-              onClick={() => { setView(n.id); setSelectedRecipe(null); setSelectedBlend(null); }}
-              style={{
-                padding: "7px 14px",
-                borderRadius: "20px",
-                border: "none",
-                cursor: "pointer",
+        {/* Desktop nav buttons */}
+        {!isMobile && (
+          <div style={{ display: "flex", gap: "6px" }}>
+            {navItems.map((n) => (
+              <button key={n.id} onClick={() => navigate(n.id)} style={{
+                padding: "7px 14px", borderRadius: "20px", border: "none", cursor: "pointer",
                 background: view === n.id ? "white" : "transparent",
                 color: view === n.id ? "#1a1a1a" : "#aaa",
-                fontWeight: view === n.id ? "600" : "400",
-                fontSize: "13px",
-              }}
-            >
-              {n.label}
-            </button>
-          ))}
-        </div>
+                fontWeight: view === n.id ? "600" : "400", fontSize: "13px",
+              }}>{n.label}</button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* ─── RECIPES VIEW ─── */}
-      {view === "home" && !selectedRecipe && (
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "28px 24px" }}>
-          {/* Stats */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "14px", marginBottom: "28px" }}>
-            {[
-              { label: "Recipes", value: "10", icon: "📋" },
-              { label: "Avg Protein / Serving", value: "54g", icon: "💪" },
-              { label: "Avg Cost / Serving", value: "~$4.70", icon: "💰" },
-              { label: "Custom Spice Blends", value: "4", icon: "🌶" },
-            ].map((s) => (
-              <div key={s.label} style={{ background: "white", borderRadius: "12px", padding: "18px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-                <div style={{ fontSize: "22px", marginBottom: "6px" }}>{s.icon}</div>
-                <div style={{ fontSize: "22px", fontWeight: "700", color: "#1a1a1a" }}>{s.value}</div>
-                <div style={{ fontSize: "11px", color: "#888", marginTop: "2px" }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-          {/* Cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(310px,1fr))", gap: "18px" }}>
-            {recipes.map((r) => (
-              <div
-                key={r.id}
-                onClick={() => setSelectedRecipe(r)}
-                style={{
-                  background: "white",
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.07)",
-                  cursor: "pointer",
+      {/* ── SCROLLABLE CONTENT ── */}
+      <div style={{ paddingBottom: isMobile ? "72px" : "0" }}>
+
+        {/* ─── RECIPES VIEW ─── */}
+        {view === "home" && !selectedRecipe && (
+          <div style={{ maxWidth: "1100px", margin: "0 auto", padding: isMobile ? "16px 12px" : "28px 24px" }}>
+            {/* Stats */}
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: isMobile ? "10px" : "14px", marginBottom: isMobile ? "16px" : "28px" }}>
+              {[
+                { label: "Recipes", value: "10", icon: "📋" },
+                { label: "Avg Protein / Serving", value: "54g", icon: "💪" },
+                { label: "Avg Cost / Serving", value: "~$4.70", icon: "💰" },
+                { label: "Custom Spice Blends", value: "4", icon: "🌶" },
+              ].map((s) => (
+                <div key={s.label} style={{ background: "white", borderRadius: "12px", padding: isMobile ? "14px" : "18px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+                  <div style={{ fontSize: isMobile ? "18px" : "22px", marginBottom: "4px" }}>{s.icon}</div>
+                  <div style={{ fontSize: isMobile ? "18px" : "22px", fontWeight: "700", color: "#1a1a1a" }}>{s.value}</div>
+                  <div style={{ fontSize: "10px", color: "#888", marginTop: "2px" }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            {/* Recipe Cards */}
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(310px,1fr))", gap: isMobile ? "12px" : "18px" }}>
+              {recipes.map((r) => (
+                <div key={r.id} onClick={() => setSelectedRecipe(r)} style={{
+                  background: "white", borderRadius: "16px", overflow: "hidden",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.07)", cursor: "pointer",
                   transition: "transform 0.15s, box-shadow 0.15s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)"; }}
-              >
-                <div style={{ background: r.color, padding: "24px 20px 18px", color: "white", position: "relative" }}>
-                  <div style={{ position: "absolute", top: "12px", right: "12px", background: "white", color: r.color, fontSize: "11px", fontWeight: "700", padding: "4px 10px", borderRadius: "20px", whiteSpace: "nowrap" }}>{r.servings} servings</div>
-                  <div style={{ fontSize: "32px", marginBottom: "6px" }}>{r.emoji}</div>
-                  <div style={{ fontSize: "10px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px" }}>{r.tag}</div>
-                  <div style={{ fontSize: "20px", fontWeight: "700" }}>{r.name}</div>
-                  <div style={{ fontSize: "12px", opacity: 0.85, marginTop: "6px" }}>🕐 {r.prepTime} prep · {r.cookTime} cook</div>
-                </div>
-                <div style={{ padding: "14px 20px 18px" }}>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "6px", marginBottom: "12px" }}>
-                    {[
-                      { label: "Protein", val: `${r.macros.protein}g`, highlight: true },
-                      { label: "Carbs", val: `${r.macros.carbs}g` },
-                      { label: "Fat", val: `${r.macros.fat}g` },
-                      { label: "Cal", val: r.macros.calories },
-                    ].map((m) => (
-                      <div key={m.label} style={{ textAlign: "center", padding: "7px 2px", borderRadius: "8px", background: m.highlight ? "#fff3e0" : "#f5f5f5" }}>
-                        <div style={{ fontSize: "14px", fontWeight: "700", color: m.highlight ? "#e67e22" : "#333" }}>{m.val}</div>
-                        <div style={{ fontSize: "10px", color: "#999", marginTop: "1px" }}>{m.label}</div>
-                      </div>
-                    ))}
+                  onMouseEnter={(e) => { if (!isMobile) { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.12)"; }}}
+                  onMouseLeave={(e) => { if (!isMobile) { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)"; }}}
+                >
+                  <div style={{ background: r.color, padding: isMobile ? "18px 16px 14px" : "24px 20px 18px", color: "white", position: "relative" }}>
+                    <div style={{ position: "absolute", top: "10px", right: "10px", background: "white", color: r.color, fontSize: "10px", fontWeight: "700", padding: "3px 8px", borderRadius: "20px" }}>{r.servings} servings</div>
+                    <div style={{ fontSize: isMobile ? "26px" : "32px", marginBottom: "4px" }}>{r.emoji}</div>
+                    <div style={{ fontSize: "10px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "3px" }}>{r.tag}</div>
+                    <div style={{ fontSize: isMobile ? "17px" : "20px", fontWeight: "700" }}>{r.name}</div>
+                    <div style={{ fontSize: "11px", opacity: 0.85, marginTop: "4px" }}>🕐 {r.prepTime} prep · {r.cookTime} cook</div>
                   </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: "12px", color: "#666" }}>{r.estimatedCost.split("/")[1]?.trim()}</span>
-                    <span style={{ fontSize: "11px", background: "#f0f0f0", color: "#555", padding: "3px 8px", borderRadius: "10px" }}>🌶 {r.spiceBlend}</span>
+                  <div style={{ padding: isMobile ? "12px 16px 14px" : "14px 20px 18px" }}>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "5px", marginBottom: "10px" }}>
+                      {[
+                        { label: "Protein", val: `${r.macros.protein}g`, highlight: true },
+                        { label: "Carbs", val: `${r.macros.carbs}g` },
+                        { label: "Fat", val: `${r.macros.fat}g` },
+                        { label: "Cal", val: r.macros.calories },
+                      ].map((m) => (
+                        <div key={m.label} style={{ textAlign: "center", padding: "6px 2px", borderRadius: "8px", background: m.highlight ? "#fff3e0" : "#f5f5f5" }}>
+                          <div style={{ fontSize: "13px", fontWeight: "700", color: m.highlight ? "#e67e22" : "#333" }}>{m.val}</div>
+                          <div style={{ fontSize: "10px", color: "#999" }}>{m.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: "11px", color: "#666" }}>{r.estimatedCost.split("/")[1]?.trim()}</span>
+                      <span style={{ fontSize: "10px", background: "#f0f0f0", color: "#555", padding: "3px 7px", borderRadius: "10px" }}>🌶 {r.spiceBlend}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* ─── RECIPE DETAIL ─── */}
-      {view === "home" && selectedRecipe && (
-        <div style={{ maxWidth: "820px", margin: "0 auto", padding: "28px 24px" }}>
-          <button onClick={() => setSelectedRecipe(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#666", fontSize: "14px", marginBottom: "20px", padding: 0 }}>
-            ← Back to recipes
-          </button>
-          <div style={{ background: selectedRecipe.color, borderRadius: "16px", padding: "28px", color: "white", marginBottom: "20px" }}>
-            <div style={{ fontSize: "42px", marginBottom: "10px" }}>{selectedRecipe.emoji}</div>
-            <div style={{ fontSize: "11px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px" }}>{selectedRecipe.tag}</div>
-            <div style={{ fontSize: "28px", fontWeight: "700", marginTop: "4px" }}>{selectedRecipe.name}</div>
-            <div style={{ marginTop: "10px", opacity: 0.85, fontSize: "13px" }}>
-              🕐 {selectedRecipe.prepTime} prep · {selectedRecipe.cookTime} cook · {selectedRecipe.servings} servings · {selectedRecipe.estimatedCost.split("/")[0]}
-            </div>
-            <div style={{ marginTop: "8px" }}>
-              <span
-                onClick={() => { setView("spices"); setSelectedBlend(spiceBlends.find((b) => b.name === selectedRecipe.spiceBlend)); }}
-                style={{ fontSize: "12px", background: "rgba(255,255,255,0.2)", padding: "4px 10px", borderRadius: "10px", cursor: "pointer" }}
-              >
-                🌶 Uses {selectedRecipe.spiceBlend} →
-              </span>
+              ))}
             </div>
           </div>
+        )}
 
-          {/* Macros */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "10px", marginBottom: "20px" }}>
-            {[
-              { label: "Protein", val: `${selectedRecipe.macros.protein}g`, color: "#e67e22", bg: "#fff3e0" },
-              { label: "Carbs", val: `${selectedRecipe.macros.carbs}g`, color: "#2980b9", bg: "#e3f2fd" },
-              { label: "Fat", val: `${selectedRecipe.macros.fat}g`, color: "#27ae60", bg: "#e8f5e9" },
-              { label: "Calories", val: selectedRecipe.macros.calories, color: "#8e44ad", bg: "#f3e5f5" },
-            ].map((m) => (
-              <div key={m.label} style={{ background: m.bg, borderRadius: "10px", padding: "14px", textAlign: "center" }}>
-                <div style={{ fontSize: "22px", fontWeight: "700", color: m.color }}>{m.val}</div>
-                <div style={{ fontSize: "11px", color: "#777", marginTop: "3px" }}>{m.label} / serving</div>
+        {/* ─── RECIPE DETAIL ─── */}
+        {view === "home" && selectedRecipe && (
+          <div style={{ maxWidth: "820px", margin: "0 auto", padding: isMobile ? "16px 12px" : "28px 24px" }}>
+            <button onClick={() => setSelectedRecipe(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#666", fontSize: "14px", marginBottom: "16px", padding: 0 }}>
+              ← Back to recipes
+            </button>
+            <div style={{ background: selectedRecipe.color, borderRadius: "16px", padding: isMobile ? "20px 16px" : "28px", color: "white", marginBottom: "16px" }}>
+              <div style={{ fontSize: isMobile ? "34px" : "42px", marginBottom: "8px" }}>{selectedRecipe.emoji}</div>
+              <div style={{ fontSize: "10px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px" }}>{selectedRecipe.tag}</div>
+              <div style={{ fontSize: isMobile ? "22px" : "28px", fontWeight: "700", marginTop: "4px" }}>{selectedRecipe.name}</div>
+              <div style={{ marginTop: "8px", opacity: 0.85, fontSize: "12px" }}>
+                🕐 {selectedRecipe.prepTime} prep · {selectedRecipe.cookTime} cook · {selectedRecipe.servings} servings · {selectedRecipe.estimatedCost.split("/")[0]}
               </div>
-            ))}
-          </div>
+              <div style={{ marginTop: "8px" }}>
+                <span onClick={() => { setView("spices"); setSelectedBlend(spiceBlends.find((b) => b.name === selectedRecipe.spiceBlend)); }}
+                  style={{ fontSize: "11px", background: "rgba(255,255,255,0.2)", padding: "4px 10px", borderRadius: "10px", cursor: "pointer" }}>
+                  🌶 Uses {selectedRecipe.spiceBlend} →
+                </span>
+              </div>
+            </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-            {/* Ingredients */}
-            <div style={{ background: "white", borderRadius: "12px", padding: "20px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-              <div style={{ fontSize: "15px", fontWeight: "700", marginBottom: "14px" }}>🛒 Ingredients</div>
-              {selectedRecipe.ingredients.map((ing, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: i < selectedRecipe.ingredients.length - 1 ? "1px solid #f5f5f5" : "none" }}>
-                  <div>
-                    <div style={{ fontSize: "13px", fontWeight: "500", color: "#333" }}>{ing.item}</div>
-                    <div style={{ fontSize: "11px", color: "#aaa" }}>{ing.amount}</div>
-                  </div>
-                  <div style={{ fontSize: "12px", color: "#666" }}>{ing.cost}</div>
+            {/* Macros */}
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: "8px", marginBottom: "16px" }}>
+              {[
+                { label: "Protein", val: `${selectedRecipe.macros.protein}g`, color: "#e67e22", bg: "#fff3e0" },
+                { label: "Carbs", val: `${selectedRecipe.macros.carbs}g`, color: "#2980b9", bg: "#e3f2fd" },
+                { label: "Fat", val: `${selectedRecipe.macros.fat}g`, color: "#27ae60", bg: "#e8f5e9" },
+                { label: "Calories", val: selectedRecipe.macros.calories, color: "#8e44ad", bg: "#f3e5f5" },
+              ].map((m) => (
+                <div key={m.label} style={{ background: m.bg, borderRadius: "10px", padding: "12px", textAlign: "center" }}>
+                  <div style={{ fontSize: isMobile ? "18px" : "22px", fontWeight: "700", color: m.color }}>{m.val}</div>
+                  <div style={{ fontSize: "10px", color: "#777", marginTop: "2px" }}>{m.label} / serving</div>
                 </div>
               ))}
             </div>
 
-            {/* Steps + notes */}
-            <div>
-              <div style={{ background: "white", borderRadius: "12px", padding: "20px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", marginBottom: "14px" }}>
-                <div style={{ fontSize: "15px", fontWeight: "700", marginBottom: "14px" }}>👨‍🍳 Instructions</div>
-                {selectedRecipe.steps.map((step, i) => (
-                  <div key={i} style={{ display: "flex", gap: "10px", marginBottom: "12px" }}>
-                    <div style={{ minWidth: "22px", height: "22px", borderRadius: "50%", background: selectedRecipe.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700" }}>{i + 1}</div>
-                    <div style={{ fontSize: "12px", color: "#444", lineHeight: "1.55", paddingTop: "3px" }}>{step}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ background: "#e8f5e9", borderRadius: "10px", padding: "14px", marginBottom: "10px" }}>
-                <div style={{ fontSize: "12px", fontWeight: "700", color: "#2e7d32", marginBottom: "5px" }}>💡 Tip</div>
-                <div style={{ fontSize: "12px", color: "#388e3c", lineHeight: "1.5" }}>{selectedRecipe.prepTip}</div>
-              </div>
-              <div style={{ background: "#fff8e1", borderRadius: "10px", padding: "14px" }}>
-                <div style={{ fontSize: "12px", fontWeight: "700", color: "#f57f17", marginBottom: "5px" }}>✨ vs. HelloFresh</div>
-                <div style={{ fontSize: "12px", color: "#f9a825", lineHeight: "1.5" }}>{selectedRecipe.helloFreshNote}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ─── SHOPPING LIST VIEW ─── */}
-      {view === "shopping" && (
-        <div style={{ maxWidth: "800px", margin: "0 auto", padding: "28px 24px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-            <div>
-              <div style={{ fontSize: "22px", fontWeight: "700" }}>🛒 Weekly Plan</div>
-              <div style={{ fontSize: "13px", color: "#666", marginTop: "4px" }}>Pick your meals for the week — duplicate ingredients are automatically combined</div>
-            </div>
-            <button
-              onClick={handleShare}
-              style={{
-                padding: "10px 20px",
-                borderRadius: "10px",
-                border: "none",
-                cursor: "pointer",
-                background: copied ? "#27ae60" : "#1a1a1a",
-                color: "white",
-                fontWeight: "600",
-                fontSize: "14px",
-                transition: "background 0.2s",
-              }}
-            >
-              {copied ? "✓ Copied!" : "📤 Share / Copy"}
-            </button>
-          </div>
-
-          {/* Recipe toggles */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginBottom: "24px" }}>
-            {recipes.map((r) => (
-              <button
-                key={r.id}
-                onClick={() => setSelectedIds((p) => p.includes(r.id) ? p.filter((x) => x !== r.id) : [...p, r.id])}
-                style={{
-                  padding: "7px 14px",
-                  borderRadius: "20px",
-                  border: `2px solid ${selectedIds.includes(r.id) ? r.color : "#ddd"}`,
-                  background: selectedIds.includes(r.id) ? r.color : "white",
-                  color: selectedIds.includes(r.id) ? "white" : "#666",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  fontSize: "12px",
-                }}
-              >
-                {r.emoji} {r.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Summary bar */}
-          {(() => {
-            const selRecipes = recipes.filter((r) => selectedIds.includes(r.id));
-            const totalServings = selRecipes.reduce((a, r) => a + r.servings, 0);
-            const totalProtein = selRecipes.reduce((a, r) => a + r.macros.protein * r.servings, 0);
-            const daysCovered = Math.round(totalServings / 2);
-            return (
-              <div style={{ background: "#1a1a1a", borderRadius: "12px", padding: "16px 20px", marginBottom: "20px", display: "flex", justifyContent: "space-around" }}>
-                {[
-                  { val: selectedIds.length, label: "meals selected", color: "#3498db" },
-                  { val: totalServings, label: `servings (~${daysCovered} days)`, color: "#f39c12" },
-                  { val: `${totalProtein}g`, label: "total protein", color: "#2ecc71" },
-                ].map((s) => (
-                  <div key={s.label} style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: "24px", fontWeight: "700", color: s.color }}>{s.val}</div>
-                    <div style={{ fontSize: "11px", color: "#777", marginTop: "2px" }}>{s.label}</div>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
-
-          {/* Categorized ingredient list */}
-          {Object.entries(CATS).map(([cat, { label, icon }]) => {
-            const items = grouped[cat];
-            if (!items || items.length === 0) return null;
-            return (
-              <div key={cat} style={{ background: "white", borderRadius: "12px", padding: "18px 20px", marginBottom: "12px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
-                <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "12px", color: "#333" }}>{icon} {label}</div>
-                {items.map((ing, i) => {
-                  const stock = getStock(ing.item);
-                  const inPantry = stock >= 2;
-                  const lowStock = stock === 1;
-                  const manuallyChecked = !!checked[ing.item];
-                  const isDone = inPantry || manuallyChecked;
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => !inPantry && setChecked((p) => ({ ...p, [ing.item]: !p[ing.item] }))}
-                      style={{
-                        display: "flex", alignItems: "center", gap: "12px",
-                        padding: "9px 8px", marginBottom: "2px",
-                        borderBottom: i < items.length - 1 ? "1px solid #f8f8f8" : "none",
-                        cursor: inPantry ? "default" : "pointer",
-                        opacity: isDone ? 0.45 : 1,
-                        background: inPantry ? "#f0fff4" : "transparent",
-                        borderRadius: "8px",
-                      }}
-                    >
-                      <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${isDone ? "#27ae60" : lowStock ? "#f39c12" : "#ddd"}`, background: isDone ? "#27ae60" : "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        {isDone && <span style={{ color: "white", fontSize: "11px" }}>✓</span>}
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: "13px", fontWeight: "500", color: "#333", textDecoration: isDone ? "line-through" : "none" }}>{ing.item}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "5px", marginTop: "2px", flexWrap: "wrap" }}>
-                          <span style={{ fontSize: "12px", fontWeight: ing.combined ? "700" : "400", color: ing.combined ? "#e67e22" : "#aaa" }}>{ing.amount}</span>
-                          {ing.combined && <span style={{ fontSize: "10px", background: "#fff3e0", color: "#e67e22", padding: "1px 6px", borderRadius: "8px", fontWeight: "600" }}>combined ×{ing.inRecipes.length}</span>}
-                          {inPantry && <span style={{ fontSize: "10px", background: "#e8f5e9", color: "#2e7d32", padding: "1px 6px", borderRadius: "8px", fontWeight: "600" }}>🥫 In pantry</span>}
-                          {lowStock && <span style={{ fontSize: "10px", background: "#fff3e0", color: "#e65100", padding: "1px 6px", borderRadius: "8px", fontWeight: "600" }}>⚠ Running low</span>}
-                          <span style={{ fontSize: "11px", color: "#ccc" }}>· {ing.inRecipes.length > 1 ? ing.inRecipes.join(", ") : ing.inRecipes[0]}</span>
-                        </div>
-                      </div>
-                      <div style={{ fontSize: "12px", color: "#888" }}>{inPantry ? "—" : ing.cost}</div>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-          <div style={{ textAlign: "center", padding: "12px" }}>
-            <button onClick={() => setChecked({})} style={{ fontSize: "12px", color: "#aaa", background: "none", border: "none", cursor: "pointer" }}>Clear all checks</button>
-          </div>
-        </div>
-      )}
-
-      {/* ─── PANTRY VIEW ─── */}
-      {view === "pantry" && (() => {
-        const allIng = getAllIngredients();
-        const stockedCount = Object.values(inventory).filter((v) => v >= 2).length;
-        return (
-          <div style={{ maxWidth: "820px", margin: "0 auto", padding: "28px 24px" }}>
-            {/* Header */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-              <div>
-                <div style={{ fontSize: "22px", fontWeight: "700" }}>🥫 Pantry & Inventory</div>
-                <div style={{ fontSize: "13px", color: "#666", marginTop: "4px" }}>
-                  Set your stock levels — items at Half or above auto-check on your shopping list
-                </div>
-              </div>
-              {stockedCount > 0 && (
-                <div style={{ background: "#e8f5e9", borderRadius: "10px", padding: "10px 16px", textAlign: "center" }}>
-                  <div style={{ fontSize: "20px", fontWeight: "700", color: "#27ae60" }}>{stockedCount}</div>
-                  <div style={{ fontSize: "11px", color: "#2e7d32" }}>items stocked</div>
-                </div>
-              )}
-            </div>
-
-            {/* Legend */}
-            <div style={{ background: "white", borderRadius: "12px", padding: "16px 20px", marginBottom: "20px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
-              <div style={{ fontSize: "12px", fontWeight: "700", color: "#555", marginBottom: "12px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Stock levels</div>
-              <div style={{ display: "flex", gap: "20px", flexWrap: "wrap" }}>
-                {[0, 1, 2, 3, 4].map((level) => (
-                  <div key={level} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    <div style={{ display: "flex", gap: "3px" }}>
-                      {[1, 2, 3, 4].map((seg) => (
-                        <div key={seg} style={{ width: "16px", height: "9px", borderRadius: "3px", background: seg <= level ? STOCK_COLORS[level] : "#e8e8e8" }} />
-                      ))}
-                    </div>
+            {/* Ingredients + Steps — stacked on mobile */}
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "16px" }}>
+              <div style={{ background: "white", borderRadius: "12px", padding: "18px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+                <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "12px" }}>🛒 Ingredients</div>
+                {selectedRecipe.ingredients.map((ing, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: i < selectedRecipe.ingredients.length - 1 ? "1px solid #f5f5f5" : "none" }}>
                     <div>
-                      <span style={{ fontSize: "12px", fontWeight: "600", color: level >= 2 ? STOCK_COLORS[level] : "#999" }}>{STOCK_SHORT[level]}</span>
-                      {level >= 2 && <span style={{ fontSize: "10px", color: "#aaa", marginLeft: "4px" }}>auto-checks</span>}
+                      <div style={{ fontSize: "13px", fontWeight: "500", color: "#333" }}>{ing.item}</div>
+                      <div style={{ fontSize: "11px", color: "#aaa" }}>{ing.amount}</div>
                     </div>
+                    <div style={{ fontSize: "12px", color: "#666" }}>{ing.cost}</div>
                   </div>
                 ))}
               </div>
+
+              <div>
+                <div style={{ background: "white", borderRadius: "12px", padding: "18px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", marginBottom: "12px" }}>
+                  <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "12px" }}>👨‍🍳 Instructions</div>
+                  {selectedRecipe.steps.map((step, i) => (
+                    <div key={i} style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+                      <div style={{ minWidth: "22px", height: "22px", borderRadius: "50%", background: selectedRecipe.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", flexShrink: 0 }}>{i + 1}</div>
+                      <div style={{ fontSize: "12px", color: "#444", lineHeight: "1.55", paddingTop: "3px" }}>{step}</div>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ background: "#e8f5e9", borderRadius: "10px", padding: "14px", marginBottom: "10px" }}>
+                  <div style={{ fontSize: "12px", fontWeight: "700", color: "#2e7d32", marginBottom: "5px" }}>💡 Tip</div>
+                  <div style={{ fontSize: "12px", color: "#388e3c", lineHeight: "1.5" }}>{selectedRecipe.prepTip}</div>
+                </div>
+                <div style={{ background: "#fff8e1", borderRadius: "10px", padding: "14px" }}>
+                  <div style={{ fontSize: "12px", fontWeight: "700", color: "#f57f17", marginBottom: "5px" }}>✨ vs. HelloFresh</div>
+                  <div style={{ fontSize: "12px", color: "#f9a825", lineHeight: "1.5" }}>{selectedRecipe.helloFreshNote}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── SHOPPING LIST ─── */}
+        {view === "shopping" && (
+          <div style={{ maxWidth: "800px", margin: "0 auto", padding: isMobile ? "16px 12px" : "28px 24px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+              <div>
+                <div style={{ fontSize: isMobile ? "18px" : "22px", fontWeight: "700" }}>🛒 Weekly Plan</div>
+                <div style={{ fontSize: "12px", color: "#666", marginTop: "3px" }}>Pick your meals — duplicate ingredients auto-combine</div>
+              </div>
+              <button onClick={handleShare} style={{
+                padding: isMobile ? "8px 14px" : "10px 20px", borderRadius: "10px", border: "none", cursor: "pointer",
+                background: copied ? "#27ae60" : "#1a1a1a", color: "white",
+                fontWeight: "600", fontSize: isMobile ? "12px" : "14px", transition: "background 0.2s", flexShrink: 0,
+              }}>
+                {copied ? "✓ Copied!" : "📤 Share"}
+              </button>
             </div>
 
-            {/* Ingredient groups */}
+            {/* Recipe toggles */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "7px", marginBottom: "16px" }}>
+              {recipes.map((r) => (
+                <button key={r.id}
+                  onClick={() => setSelectedIds((p) => p.includes(r.id) ? p.filter((x) => x !== r.id) : [...p, r.id])}
+                  style={{
+                    padding: isMobile ? "6px 10px" : "7px 14px", borderRadius: "20px",
+                    border: `2px solid ${selectedIds.includes(r.id) ? r.color : "#ddd"}`,
+                    background: selectedIds.includes(r.id) ? r.color : "white",
+                    color: selectedIds.includes(r.id) ? "white" : "#666",
+                    cursor: "pointer", fontWeight: "600", fontSize: isMobile ? "11px" : "12px",
+                  }}>
+                  {r.emoji} {r.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Summary bar */}
+            {(() => {
+              const selRecipes = recipes.filter((r) => selectedIds.includes(r.id));
+              const totalServings = selRecipes.reduce((a, r) => a + r.servings, 0);
+              const totalProtein = selRecipes.reduce((a, r) => a + r.macros.protein * r.servings, 0);
+              const daysCovered = Math.round(totalServings / 2);
+              return (
+                <div style={{ background: "#1a1a1a", borderRadius: "12px", padding: "14px 16px", marginBottom: "16px", display: "flex", justifyContent: "space-around" }}>
+                  {[
+                    { val: selectedIds.length, label: "meals", color: "#3498db" },
+                    { val: totalServings, label: `~${daysCovered} days`, color: "#f39c12" },
+                    { val: `${totalProtein}g`, label: "protein", color: "#2ecc71" },
+                  ].map((s) => (
+                    <div key={s.label} style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: isMobile ? "20px" : "24px", fontWeight: "700", color: s.color }}>{s.val}</div>
+                      <div style={{ fontSize: "10px", color: "#777", marginTop: "1px" }}>{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
+            {/* Ingredient list */}
             {Object.entries(CATS).map(([cat, { label, icon }]) => {
-              const items = allIng[cat];
+              const items = grouped[cat];
               if (!items || items.length === 0) return null;
               return (
-                <div key={cat} style={{ background: "white", borderRadius: "12px", padding: "18px 20px", marginBottom: "14px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
-                  <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "14px", color: "#333" }}>{icon} {label}</div>
+                <div key={cat} style={{ background: "white", borderRadius: "12px", padding: isMobile ? "14px" : "18px 20px", marginBottom: "10px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                  <div style={{ fontSize: "13px", fontWeight: "700", marginBottom: "10px", color: "#333" }}>{icon} {label}</div>
                   {items.map((ing, i) => {
-                    const level = getStock(ing.item);
-                    const color = STOCK_COLORS[level];
-                    const inPantry = level >= 2;
+                    const stock = getStock(ing.item);
+                    const inPantry = stock >= 2;
+                    const lowStock = stock === 1;
+                    const isDone = inPantry || !!checked[ing.item];
                     return (
-                      <div key={i} style={{ display: "flex", alignItems: "center", gap: "14px", padding: "10px 0", borderBottom: i < items.length - 1 ? "1px solid #f5f5f5" : "none" }}>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: "13px", fontWeight: "500", color: "#333" }}>{ing.item}</div>
-                          <div style={{ fontSize: "11px", color: inPantry ? "#27ae60" : "#bbb", marginTop: "2px" }}>
-                            {inPantry ? "✓ Auto-checks on shopping list" : "Will appear on shopping list"}
+                      <div key={i} onClick={() => !inPantry && setChecked((p) => ({ ...p, [ing.item]: !p[ing.item] }))}
+                        style={{
+                          display: "flex", alignItems: "center", gap: "10px",
+                          padding: "9px 6px", marginBottom: "1px",
+                          borderBottom: i < items.length - 1 ? "1px solid #f8f8f8" : "none",
+                          cursor: inPantry ? "default" : "pointer",
+                          opacity: isDone ? 0.45 : 1,
+                          background: inPantry ? "#f0fff4" : "transparent",
+                          borderRadius: "8px",
+                        }}>
+                        <div style={{ width: "18px", height: "18px", borderRadius: "4px", border: `2px solid ${isDone ? "#27ae60" : lowStock ? "#f39c12" : "#ddd"}`, background: isDone ? "#27ae60" : "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          {isDone && <span style={{ color: "white", fontSize: "11px" }}>✓</span>}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: "13px", fontWeight: "500", color: "#333", textDecoration: isDone ? "line-through" : "none" }}>{ing.item}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "4px", marginTop: "2px", flexWrap: "wrap" }}>
+                            <span style={{ fontSize: "11px", fontWeight: ing.combined ? "700" : "400", color: ing.combined ? "#e67e22" : "#aaa" }}>{ing.amount}</span>
+                            {ing.combined && <span style={{ fontSize: "9px", background: "#fff3e0", color: "#e67e22", padding: "1px 5px", borderRadius: "8px", fontWeight: "600" }}>×{ing.inRecipes.length}</span>}
+                            {inPantry && <span style={{ fontSize: "9px", background: "#e8f5e9", color: "#2e7d32", padding: "1px 5px", borderRadius: "8px", fontWeight: "600" }}>🥫 pantry</span>}
+                            {lowStock && <span style={{ fontSize: "9px", background: "#fff3e0", color: "#e65100", padding: "1px 5px", borderRadius: "8px", fontWeight: "600" }}>⚠ low</span>}
                           </div>
                         </div>
-                        {/* Stock bar */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-                          <span style={{ fontSize: "11px", fontWeight: "700", color: color, minWidth: "36px", textAlign: "right" }}>{STOCK_SHORT[level]}</span>
-                          <div style={{ display: "flex", gap: "5px" }}>
-                            {[1, 2, 3, 4].map((seg) => (
-                              <div
-                                key={seg}
-                                onClick={() => setStock(ing.item, seg === level ? 0 : seg)}
-                                title={seg === 1 ? "Low" : seg === 2 ? "Half" : seg === 3 ? "Good" : "Full"}
-                                style={{
-                                  width: "32px", height: "16px", borderRadius: "5px",
-                                  background: seg <= level ? color : "#ebebeb",
-                                  cursor: "pointer",
-                                  transition: "background 0.12s, transform 0.1s",
-                                  boxShadow: seg <= level ? `0 1px 3px ${color}60` : "none",
-                                }}
-                                onMouseEnter={(e) => { e.currentTarget.style.transform = "scaleY(1.2)"; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.transform = "scaleY(1)"; }}
-                              />
-                            ))}
-                          </div>
-                          <button
-                            onClick={() => setStock(ing.item, 0)}
-                            style={{ fontSize: "11px", color: "#ccc", background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}
-                          >✕</button>
-                        </div>
+                        <div style={{ fontSize: "11px", color: "#888", flexShrink: 0 }}>{inPantry ? "—" : ing.cost}</div>
                       </div>
                     );
                   })}
                 </div>
               );
             })}
-
-            {/* Tip */}
-            <div style={{ background: "#fff8e1", borderRadius: "12px", padding: "16px 20px", marginTop: "4px" }}>
-              <div style={{ fontSize: "13px", fontWeight: "700", color: "#f57f17", marginBottom: "6px" }}>💡 How to use this</div>
-              <div style={{ fontSize: "13px", color: "#795548", lineHeight: "1.6" }}>
-                Each Monday before shopping, update the stock bars to reflect what you actually have. Anything at <strong>Half, Good, or Full</strong> will be auto-checked on your shopping list and excluded from the shared list you send to your phone. Click a filled bar to reset it to empty.
-              </div>
+            <div style={{ textAlign: "center", padding: "10px" }}>
+              <button onClick={() => setChecked({})} style={{ fontSize: "12px", color: "#aaa", background: "none", border: "none", cursor: "pointer" }}>Clear all checks</button>
             </div>
           </div>
-        );
-      })()}
+        )}
 
-      {/* ─── SPICE BLENDS VIEW ─── */}
-      {view === "spices" && !selectedBlend && (
-        <div style={{ maxWidth: "900px", margin: "0 auto", padding: "28px 24px" }}>
-          <div style={{ fontSize: "22px", fontWeight: "700", marginBottom: "6px" }}>🌶 Custom Spice Blends</div>
-          <div style={{ fontSize: "13px", color: "#666", marginBottom: "24px" }}>
-            Make these in bulk and always have them on hand — the exact flavours HelloFresh uses, yours to keep forever.
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(400px,1fr))", gap: "18px" }}>
-            {spiceBlends.map((blend) => (
-              <div
-                key={blend.id}
-                onClick={() => setSelectedBlend(blend)}
-                style={{ background: "white", borderRadius: "14px", overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.07)", cursor: "pointer", transition: "transform 0.15s, box-shadow 0.15s" }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(0,0,0,0.12)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.07)"; }}
-              >
-                <div style={{ background: blend.color, padding: "20px", color: "white" }}>
-                  <div style={{ fontSize: "28px", marginBottom: "6px" }}>{blend.emoji}</div>
-                  <div style={{ fontSize: "11px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "3px" }}>{blend.tagline}</div>
-                  <div style={{ fontSize: "20px", fontWeight: "700" }}>{blend.name}</div>
+        {/* ─── PANTRY VIEW ─── */}
+        {view === "pantry" && (() => {
+          const allIng = getAllIngredients();
+          const stockedCount = Object.values(inventory).filter((v) => v >= 2).length;
+          return (
+            <div style={{ maxWidth: "820px", margin: "0 auto", padding: isMobile ? "16px 12px" : "28px 24px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
+                <div>
+                  <div style={{ fontSize: isMobile ? "18px" : "22px", fontWeight: "700" }}>🥫 Pantry & Inventory</div>
+                  <div style={{ fontSize: "12px", color: "#666", marginTop: "3px" }}>Half or above = auto-checked on shopping list</div>
                 </div>
-                <div style={{ padding: "16px 20px" }}>
-                  <div style={{ fontSize: "12px", color: "#555", lineHeight: "1.55", marginBottom: "12px" }}>{blend.description}</div>
-                  <div style={{ fontSize: "11px", color: "#888", marginBottom: "8px" }}>Used in:</div>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                    {blend.usedIn.map((r) => (
-                      <span key={r} style={{ fontSize: "11px", background: "#f0f0f0", color: "#555", padding: "3px 8px", borderRadius: "8px" }}>{r}</span>
-                    ))}
+                {stockedCount > 0 && (
+                  <div style={{ background: "#e8f5e9", borderRadius: "10px", padding: "8px 14px", textAlign: "center", flexShrink: 0 }}>
+                    <div style={{ fontSize: "18px", fontWeight: "700", color: "#27ae60" }}>{stockedCount}</div>
+                    <div style={{ fontSize: "10px", color: "#2e7d32" }}>stocked</div>
                   </div>
+                )}
+              </div>
+
+              {/* Legend */}
+              <div style={{ background: "white", borderRadius: "12px", padding: "14px 16px", marginBottom: "16px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                <div style={{ fontSize: "11px", fontWeight: "700", color: "#555", marginBottom: "10px", textTransform: "uppercase", letterSpacing: "0.5px" }}>Stock levels</div>
+                <div style={{ display: "flex", gap: isMobile ? "12px" : "20px", flexWrap: "wrap" }}>
+                  {[0, 1, 2, 3, 4].map((level) => (
+                    <div key={level} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                      <div style={{ display: "flex", gap: "2px" }}>
+                        {[1, 2, 3, 4].map((seg) => (
+                          <div key={seg} style={{ width: isMobile ? "12px" : "16px", height: "8px", borderRadius: "3px", background: seg <= level ? STOCK_COLORS[level] : "#e8e8e8" }} />
+                        ))}
+                      </div>
+                      <span style={{ fontSize: "11px", fontWeight: "600", color: level >= 2 ? STOCK_COLORS[level] : "#999" }}>{STOCK_SHORT[level]}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-          <div style={{ background: "#fff8e1", borderRadius: "12px", padding: "20px", marginTop: "20px" }}>
-            <div style={{ fontSize: "14px", fontWeight: "700", color: "#f57f17", marginBottom: "8px" }}>💡 The Bulk Strategy</div>
-            <div style={{ fontSize: "13px", color: "#795548", lineHeight: "1.6" }}>
-              Spend one hour sourcing these spices in bulk (Bulk Barn, Costco, or Amazon) and you'll spend about $30–40 to fill all 4 jars.
-              That covers 6+ months of cooking. A HelloFresh spice packet costs roughly $2–3 per meal — these jars pay for themselves in your first week.
-              Label each jar with the recipe name and ratio so it's grab-and-go.
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* ─── BLEND DETAIL ─── */}
-      {view === "spices" && selectedBlend && (
-        <div style={{ maxWidth: "700px", margin: "0 auto", padding: "28px 24px" }}>
-          <button onClick={() => setSelectedBlend(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#666", fontSize: "14px", marginBottom: "20px", padding: 0 }}>
-            ← Back to blends
-          </button>
-          <div style={{ background: selectedBlend.color, borderRadius: "16px", padding: "28px", color: "white", marginBottom: "20px" }}>
-            <div style={{ fontSize: "38px", marginBottom: "8px" }}>{selectedBlend.emoji}</div>
-            <div style={{ fontSize: "11px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px" }}>{selectedBlend.tagline}</div>
-            <div style={{ fontSize: "26px", fontWeight: "700", marginTop: "4px" }}>{selectedBlend.name}</div>
-          </div>
-          <div style={{ background: "white", borderRadius: "12px", padding: "24px", marginBottom: "16px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
-              <div style={{ fontSize: "16px", fontWeight: "700" }}>Recipe</div>
-              <div style={{ display: "flex", gap: "6px" }}>
-                {["single", "bulk"].map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => setBlendMode(m)}
-                    style={{
-                      padding: "6px 14px", borderRadius: "16px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: "600",
-                      background: blendMode === m ? selectedBlend.color : "#f0f0f0",
-                      color: blendMode === m ? "white" : "#555",
-                    }}
-                  >
-                    {m === "single" ? "Single Use" : "🫙 Bulk Jar"}
-                  </button>
-                ))}
+              {/* Ingredient groups */}
+              {Object.entries(CATS).map(([cat, { label, icon }]) => {
+                const items = allIng[cat];
+                if (!items || items.length === 0) return null;
+                return (
+                  <div key={cat} style={{ background: "white", borderRadius: "12px", padding: isMobile ? "14px" : "18px 20px", marginBottom: "12px", boxShadow: "0 1px 4px rgba(0,0,0,0.05)" }}>
+                    <div style={{ fontSize: "13px", fontWeight: "700", marginBottom: "12px", color: "#333" }}>{icon} {label}</div>
+                    {items.map((ing, i) => {
+                      const level = getStock(ing.item);
+                      const color = STOCK_COLORS[level];
+                      const inPantry = level >= 2;
+                      return (
+                        <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", padding: "9px 0", borderBottom: i < items.length - 1 ? "1px solid #f5f5f5" : "none" }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: "13px", fontWeight: "500", color: "#333" }}>{ing.item}</div>
+                            <div style={{ fontSize: "10px", color: inPantry ? "#27ae60" : "#bbb", marginTop: "1px" }}>
+                              {inPantry ? "✓ Auto-checks on shopping list" : "Will appear on shopping list"}
+                            </div>
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+                            <span style={{ fontSize: "10px", fontWeight: "700", color, minWidth: "30px", textAlign: "right" }}>{STOCK_SHORT[level]}</span>
+                            <div style={{ display: "flex", gap: "4px" }}>
+                              {[1, 2, 3, 4].map((seg) => (
+                                <div key={seg}
+                                  onClick={() => setStock(ing.item, seg === level ? 0 : seg)}
+                                  style={{
+                                    width: isMobile ? "26px" : "32px", height: "16px", borderRadius: "5px",
+                                    background: seg <= level ? color : "#ebebeb",
+                                    cursor: "pointer", transition: "background 0.12s",
+                                  }} />
+                              ))}
+                            </div>
+                            <button onClick={() => setStock(ing.item, 0)} style={{ fontSize: "11px", color: "#ccc", background: "none", border: "none", cursor: "pointer", padding: "0 2px" }}>✕</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+              <div style={{ background: "#fff8e1", borderRadius: "12px", padding: "14px 16px" }}>
+                <div style={{ fontSize: "13px", fontWeight: "700", color: "#f57f17", marginBottom: "5px" }}>💡 How to use this</div>
+                <div style={{ fontSize: "12px", color: "#795548", lineHeight: "1.6" }}>
+                  Each Monday before shopping, update the stock bars. Anything at <strong>Half, Good, or Full</strong> auto-checks on your shopping list and gets excluded from the shared grocery list.
+                </div>
               </div>
             </div>
-            <div style={{ background: "#f9f9f9", borderRadius: "10px", padding: "16px" }}>
-              {selectedBlend.ratio.map((row, i) => (
-                <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: i < selectedBlend.ratio.length - 1 ? "1px solid #efefef" : "none" }}>
-                  <div style={{ fontSize: "14px", color: "#333" }}>{row.spice}</div>
-                  <div style={{ fontSize: "14px", fontWeight: "600", color: selectedBlend.color }}>{blendMode === "single" ? row.single : row.bulk}</div>
+          );
+        })()}
+
+        {/* ─── SPICE BLENDS VIEW ─── */}
+        {view === "spices" && !selectedBlend && (
+          <div style={{ maxWidth: "900px", margin: "0 auto", padding: isMobile ? "16px 12px" : "28px 24px" }}>
+            <div style={{ fontSize: isMobile ? "18px" : "22px", fontWeight: "700", marginBottom: "4px" }}>🌶 Custom Spice Blends</div>
+            <div style={{ fontSize: "12px", color: "#666", marginBottom: "18px" }}>The exact HelloFresh flavours — yours to keep forever.</div>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(auto-fill, minmax(400px,1fr))", gap: "14px" }}>
+              {spiceBlends.map((blend) => (
+                <div key={blend.id} onClick={() => setSelectedBlend(blend)}
+                  style={{ background: "white", borderRadius: "14px", overflow: "hidden", boxShadow: "0 2px 8px rgba(0,0,0,0.07)", cursor: "pointer" }}>
+                  <div style={{ background: blend.color, padding: isMobile ? "16px" : "20px", color: "white" }}>
+                    <div style={{ fontSize: "26px", marginBottom: "4px" }}>{blend.emoji}</div>
+                    <div style={{ fontSize: "10px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px", marginBottom: "2px" }}>{blend.tagline}</div>
+                    <div style={{ fontSize: isMobile ? "17px" : "20px", fontWeight: "700" }}>{blend.name}</div>
+                  </div>
+                  <div style={{ padding: "14px 16px" }}>
+                    <div style={{ fontSize: "12px", color: "#555", lineHeight: "1.5", marginBottom: "10px" }}>{blend.description}</div>
+                    <div style={{ fontSize: "11px", color: "#888", marginBottom: "6px" }}>Used in:</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                      {blend.usedIn.map((r) => (
+                        <span key={r} style={{ fontSize: "11px", background: "#f0f0f0", color: "#555", padding: "3px 8px", borderRadius: "8px" }}>{r}</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-            {blendMode === "bulk" && (
-              <div style={{ marginTop: "14px", background: "#fff8e1", borderRadius: "8px", padding: "12px" }}>
-                <div style={{ fontSize: "12px", color: "#795548", lineHeight: "1.55" }}>🫙 {selectedBlend.bulkNote}</div>
+            <div style={{ background: "#fff8e1", borderRadius: "12px", padding: "16px", marginTop: "16px" }}>
+              <div style={{ fontSize: "13px", fontWeight: "700", color: "#f57f17", marginBottom: "6px" }}>💡 The Bulk Strategy</div>
+              <div style={{ fontSize: "12px", color: "#795548", lineHeight: "1.6" }}>
+                Spend one hour sourcing these spices in bulk (Bulk Barn, Costco, or Amazon) and you'll spend about $30–40 to fill all 4 jars.
+                That covers 6+ months of cooking. A HelloFresh spice packet costs roughly $2–3 per meal — these jars pay for themselves in your first week.
               </div>
-            )}
-          </div>
-          <div style={{ background: "white", borderRadius: "12px", padding: "20px", marginBottom: "14px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-            <div style={{ fontSize: "13px", fontWeight: "700", color: "#333", marginBottom: "8px" }}>📍 Where to Buy</div>
-            <div style={{ fontSize: "13px", color: "#555", lineHeight: "1.6" }}>{selectedBlend.whereToBuy}</div>
-          </div>
-          <div style={{ background: "#f0f0f0", borderRadius: "12px", padding: "16px" }}>
-            <div style={{ fontSize: "13px", fontWeight: "700", marginBottom: "8px" }}>Used in these recipes</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
-              {selectedBlend.usedIn.map((r) => {
-                const recipe = recipes.find((rec) => rec.name === r);
-                return (
-                  <span
-                    key={r}
-                    onClick={() => { if (recipe) { setView("home"); setSelectedRecipe(recipe); setSelectedBlend(null); } }}
-                    style={{ fontSize: "12px", background: recipe ? recipe.color : "#999", color: "white", padding: "5px 12px", borderRadius: "10px", cursor: "pointer" }}
-                  >
-                    {recipe?.emoji} {r}
-                  </span>
-                );
-              })}
             </div>
           </div>
+        )}
+
+        {/* ─── BLEND DETAIL ─── */}
+        {view === "spices" && selectedBlend && (
+          <div style={{ maxWidth: "700px", margin: "0 auto", padding: isMobile ? "16px 12px" : "28px 24px" }}>
+            <button onClick={() => setSelectedBlend(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#666", fontSize: "14px", marginBottom: "16px", padding: 0 }}>
+              ← Back to blends
+            </button>
+            <div style={{ background: selectedBlend.color, borderRadius: "16px", padding: isMobile ? "20px 16px" : "28px", color: "white", marginBottom: "16px" }}>
+              <div style={{ fontSize: "34px", marginBottom: "6px" }}>{selectedBlend.emoji}</div>
+              <div style={{ fontSize: "10px", fontWeight: "600", opacity: 0.8, textTransform: "uppercase", letterSpacing: "1px" }}>{selectedBlend.tagline}</div>
+              <div style={{ fontSize: isMobile ? "20px" : "26px", fontWeight: "700", marginTop: "4px" }}>{selectedBlend.name}</div>
+            </div>
+            <div style={{ background: "white", borderRadius: "12px", padding: isMobile ? "16px" : "24px", marginBottom: "14px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+                <div style={{ fontSize: "15px", fontWeight: "700" }}>Recipe</div>
+                <div style={{ display: "flex", gap: "6px" }}>
+                  {["single", "bulk"].map((m) => (
+                    <button key={m} onClick={() => setBlendMode(m)} style={{
+                      padding: "6px 12px", borderRadius: "16px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: "600",
+                      background: blendMode === m ? selectedBlend.color : "#f0f0f0",
+                      color: blendMode === m ? "white" : "#555",
+                    }}>
+                      {m === "single" ? "Single Use" : "🫙 Bulk Jar"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div style={{ background: "#f9f9f9", borderRadius: "10px", padding: "14px" }}>
+                {selectedBlend.ratio.map((row, i) => (
+                  <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "7px 0", borderBottom: i < selectedBlend.ratio.length - 1 ? "1px solid #efefef" : "none" }}>
+                    <div style={{ fontSize: "13px", color: "#333" }}>{row.spice}</div>
+                    <div style={{ fontSize: "13px", fontWeight: "600", color: selectedBlend.color }}>{blendMode === "single" ? row.single : row.bulk}</div>
+                  </div>
+                ))}
+              </div>
+              {blendMode === "bulk" && (
+                <div style={{ marginTop: "12px", background: "#fff8e1", borderRadius: "8px", padding: "12px" }}>
+                  <div style={{ fontSize: "12px", color: "#795548", lineHeight: "1.55" }}>🫙 {selectedBlend.bulkNote}</div>
+                </div>
+              )}
+            </div>
+            <div style={{ background: "white", borderRadius: "12px", padding: "16px", marginBottom: "12px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+              <div style={{ fontSize: "13px", fontWeight: "700", color: "#333", marginBottom: "6px" }}>📍 Where to Buy</div>
+              <div style={{ fontSize: "13px", color: "#555", lineHeight: "1.6" }}>{selectedBlend.whereToBuy}</div>
+            </div>
+            <div style={{ background: "#f0f0f0", borderRadius: "12px", padding: "14px" }}>
+              <div style={{ fontSize: "13px", fontWeight: "700", marginBottom: "8px" }}>Used in these recipes</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                {selectedBlend.usedIn.map((r) => {
+                  const recipe = recipes.find((rec) => rec.name === r);
+                  return (
+                    <span key={r}
+                      onClick={() => { if (recipe) { setView("home"); setSelectedRecipe(recipe); setSelectedBlend(null); } }}
+                      style={{ fontSize: "12px", background: recipe ? recipe.color : "#999", color: "white", padding: "5px 12px", borderRadius: "10px", cursor: "pointer" }}>
+                      {recipe?.emoji} {r}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── MOBILE BOTTOM NAV ── */}
+      {isMobile && (
+        <div style={{
+          position: "fixed", bottom: 0, left: 0, right: 0,
+          background: "#1a1a1a", display: "flex",
+          borderTop: "1px solid #2a2a2a", zIndex: 100,
+          paddingBottom: "env(safe-area-inset-bottom)",
+        }}>
+          {navItems.map((n) => (
+            <button key={n.id} onClick={() => navigate(n.id)} style={{
+              flex: 1, padding: "10px 4px 8px", background: "transparent", border: "none",
+              display: "flex", flexDirection: "column", alignItems: "center", gap: "3px",
+              cursor: "pointer",
+            }}>
+              <span style={{ fontSize: "20px", lineHeight: 1 }}>{n.emoji}</span>
+              <span style={{ fontSize: "10px", fontWeight: view === n.id ? "700" : "400", color: view === n.id ? "white" : "#666" }}>{n.short}</span>
+              {view === n.id && <div style={{ width: "4px", height: "4px", borderRadius: "50%", background: "white", marginTop: "1px" }} />}
+            </button>
+          ))}
         </div>
       )}
     </div>

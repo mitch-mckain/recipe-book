@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipe Book — Design System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #f5f2ec; color: #1a1a1a; padding: 40px; }
+    h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    h2 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin: 48px 0 20px; border-bottom: 1px solid #e0ddd8; padding-bottom: 10px; }
+    .section { margin-bottom: 8px; }
+
+    /* Color swatches */
+    .color-row { display: flex; flex-wrap: wrap; gap: 12px; }
+    .swatch { border-radius: 10px; overflow: hidden; width: 120px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .swatch-block { height: 64px; }
+    .swatch-label { background: white; padding: 8px 10px; }
+    .swatch-label .name { font-size: 11px; font-weight: 600; color: #333; }
+    .swatch-label .hex { font-size: 10px; color: #999; font-family: monospace; }
+
+    /* Typography */
+    .type-row { background: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 8px; display: flex; align-items: baseline; gap: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
+    .type-meta { font-size: 11px; color: #aaa; min-width: 180px; flex-shrink: 0; }
+
+    /* Shadow */
+    .shadow-row { display: flex; gap: 20px; flex-wrap: wrap; }
+    .shadow-card { background: white; border-radius: 12px; padding: 20px 24px; width: 180px; text-align: center; }
+    .shadow-label { font-size: 11px; color: #888; margin-top: 8px; }
+
+    /* Radius */
+    .radius-row { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-end; }
+    .radius-block { background: white; width: 80px; height: 80px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: center; }
+    .radius-wrap { text-align: center; }
+    .radius-wrap .label { font-size: 11px; color: #888; margin-top: 8px; }
+
+    /* Components */
+    .component-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  </style>
+</head>
+<body>
+
+  <h1>📖 Recipe Book — Design System</h1>
+  <p style="font-size:13px; color:#888; margin-top:4px;">All visual tokens and components used in the app</p>
+
+  <!-- ─── COLORS ─── -->
+  <h2>Colors — Base</h2>
+  <div class="color-row">
+    <div class="swatch">
+      <div class="swatch-block" style="background:#f5f2ec;border:1px solid #e0ddd8;"></div>
+      <div class="swatch-label"><div class="name">Background</div><div class="hex">#f5f2ec</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#ffffff;border:1px solid #eee;"></div>
+      <div class="swatch-label"><div class="name">Surface</div><div class="hex">#ffffff</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#1a1a1a;"></div>
+      <div class="swatch-label"><div class="name">Dark / Nav</div><div class="hex">#1a1a1a</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#333333;"></div>
+      <div class="swatch-label"><div class="name">Text Primary</div><div class="hex">#333333</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#666666;"></div>
+      <div class="swatch-label"><div class="name">Text Secondary</div><div class="hex">#666666</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#888888;"></div>
+      <div class="swatch-label"><div class="name">Text Muted</div><div class="hex">#888888</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#aaaaaa;"></div>
+      <div class="swatch-label"><div class="name">Text Disabled</div><div class="hex">#aaaaaa</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#dddddd;"></div>
+      <div class="swatch-label"><div class="name">Border</div><div class="hex">#dddddd</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#f0f0f0;"></div>
+      <div class="swatch-label"><div class="name">Chip / Tag BG</div><div class="hex">#f0f0f0</div></div>
+    </div>
+  </div>
+
+  <h2>Colors — Semantic</h2>
+  <div class="color-row">
+    <div class="swatch">
+      <div class="swatch-block" style="background:#e67e22;"></div>
+      <div class="swatch-label"><div class="name">Protein / Orange</div><div class="hex">#e67e22</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#fff3e0;border:1px solid #fce8c5;"></div>
+      <div class="swatch-label"><div class="name">Protein BG</div><div class="hex">#fff3e0</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#2980b9;"></div>
+      <div class="swatch-label"><div class="name">Carbs / Blue</div><div class="hex">#2980b9</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#e3f2fd;border:1px solid #d0e8f8;"></div>
+      <div class="swatch-label"><div class="name">Carbs BG</div><div class="hex">#e3f2fd</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#27ae60;"></div>
+      <div class="swatch-label"><div class="name">Fat / Green</div><div class="hex">#27ae60</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#e8f5e9;border:1px solid #d5edda;"></div>
+      <div class="swatch-label"><div class="name">Fat BG / Success</div><div class="hex">#e8f5e9</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#8e44ad;"></div>
+      <div class="swatch-label"><div class="name">Calories / Purple</div><div class="hex">#8e44ad</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#f3e5f5;border:1px solid #e8d3f0;"></div>
+      <div class="swatch-label"><div class="name">Calories BG</div><div class="hex">#f3e5f5</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#f57f17;"></div>
+      <div class="swatch-label"><div class="name">Warning / Tip</div><div class="hex">#f57f17</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#fff8e1;border:1px solid #faecc0;"></div>
+      <div class="swatch-label"><div class="name">Warning BG</div><div class="hex">#fff8e1</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#3498db;"></div>
+      <div class="swatch-label"><div class="name">Info / Blue</div><div class="hex">#3498db</div></div>
+    </div>
+  </div>
+
+  <h2>Colors — Recipe Card Accents</h2>
+  <div class="color-row">
+    <div class="swatch">
+      <div class="swatch-block" style="background:#e74c3c;"></div>
+      <div class="swatch-label"><div class="name">Turkey Taco</div><div class="hex">#e74c3c</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#c0392b;"></div>
+      <div class="swatch-label"><div class="name">Tex Mex / Chili</div><div class="hex">#c0392b</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#e67e22;"></div>
+      <div class="swatch-label"><div class="name">Chipotle Burger</div><div class="hex">#e67e22</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#27ae60;"></div>
+      <div class="swatch-label"><div class="name">Italian / Greek</div><div class="hex">#27ae60</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#2980b9;"></div>
+      <div class="swatch-label"><div class="name">Power Bowl</div><div class="hex">#2980b9</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#8e44ad;"></div>
+      <div class="swatch-label"><div class="name">Korean</div><div class="hex">#8e44ad</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#16a085;"></div>
+      <div class="swatch-label"><div class="name">Teriyaki</div><div class="hex">#16a085</div></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-block" style="background:#d35400;"></div>
+      <div class="swatch-label"><div class="name">Lamb Pita</div><div class="hex">#d35400</div></div>
+    </div>
+  </div>
+
+  <!-- ─── TYPOGRAPHY ─── -->
+  <h2>Typography — Inter</h2>
+
+  <div class="type-row">
+    <div class="type-meta">28px / Bold 700</div>
+    <div style="font-size:28px;font-weight:700;">App Title / Page Hero</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">22px / Bold 700</div>
+    <div style="font-size:22px;font-weight:700;">Page Heading</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">20px / Bold 700</div>
+    <div style="font-size:20px;font-weight:700;">Card Title</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">18px / Bold 700</div>
+    <div style="font-size:18px;font-weight:700;">Nav App Name</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">16px / Bold 700</div>
+    <div style="font-size:16px;font-weight:700;">Section Title</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">15px / Bold 700</div>
+    <div style="font-size:15px;font-weight:700;">Card Section Heading</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">14px / Bold 700</div>
+    <div style="font-size:14px;font-weight:700;">Label Heavy</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">13px / Medium 500</div>
+    <div style="font-size:13px;font-weight:500;color:#333;">Body — ingredient name, nav tab</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">12px / Regular 400</div>
+    <div style="font-size:12px;color:#666;">Body Small — description, instructions, notes</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">11px / Regular 400 · #777</div>
+    <div style="font-size:11px;color:#777;">Nav subtitle, serving count</div>
+  </div>
+  <div class="type-row">
+    <div class="type-meta">10px / SemiBold 600 · Uppercase · LS 1px</div>
+    <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#888;">Tag / Category Label</div>
+  </div>
+
+  <!-- ─── SHADOWS ─── -->
+  <h2>Elevation / Shadows</h2>
+  <div class="shadow-row">
+    <div>
+      <div class="shadow-card" style="box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+        <div style="font-size:12px;color:#555;">Aa</div>
+      </div>
+      <div class="shadow-label">Low<br><span style="font-family:monospace;font-size:9px;">0 1px 4px rgba(0,0,0,0.06)</span></div>
+    </div>
+    <div>
+      <div class="shadow-card" style="box-shadow:0 2px 8px rgba(0,0,0,0.07);">
+        <div style="font-size:12px;color:#555;">Aa</div>
+      </div>
+      <div class="shadow-label">Medium<br><span style="font-family:monospace;font-size:9px;">0 2px 8px rgba(0,0,0,0.07)</span></div>
+    </div>
+    <div>
+      <div class="shadow-card" style="box-shadow:0 8px 24px rgba(0,0,0,0.12);">
+        <div style="font-size:12px;color:#555;">Aa</div>
+      </div>
+      <div class="shadow-label">High (hover)<br><span style="font-family:monospace;font-size:9px;">0 8px 24px rgba(0,0,0,0.12)</span></div>
+    </div>
+  </div>
+
+  <!-- ─── BORDER RADIUS ─── -->
+  <h2>Border Radius</h2>
+  <div class="radius-row">
+    <div class="radius-wrap">
+      <div class="radius-block" style="border-radius:4px;"></div>
+      <div class="label">4px<br>Checkbox</div>
+    </div>
+    <div class="radius-wrap">
+      <div class="radius-block" style="border-radius:8px;"></div>
+      <div class="label">8px<br>Macro pill</div>
+    </div>
+    <div class="radius-wrap">
+      <div class="radius-block" style="border-radius:10px;"></div>
+      <div class="label">10px<br>Small card</div>
+    </div>
+    <div class="radius-wrap">
+      <div class="radius-block" style="border-radius:12px;"></div>
+      <div class="label">12px<br>Card</div>
+    </div>
+    <div class="radius-wrap">
+      <div class="radius-block" style="border-radius:16px;"></div>
+      <div class="label">16px<br>Recipe card</div>
+    </div>
+    <div class="radius-wrap">
+      <div class="radius-block" style="border-radius:999px;width:80px;height:36px;"></div>
+      <div class="label">999px<br>Pill / Nav tab</div>
+    </div>
+  </div>
+
+  <!-- ─── COMPONENTS ─── -->
+  <h2>Component — Navigation Bar</h2>
+  <div style="background:#1a1a1a;color:white;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;border-radius:12px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:26px;">📖</span>
+      <div>
+        <div style="font-size:18px;font-weight:700;">Mitch's Recipe Book</div>
+        <div style="font-size:11px;color:#777;">10 High-Protein Meals · 4 Custom Spice Blends</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <button style="padding:7px 14px;border-radius:20px;border:none;cursor:pointer;background:white;color:#1a1a1a;font-weight:600;font-size:13px;font-family:Inter,sans-serif;">🍽 Recipes</button>
+      <button style="padding:7px 14px;border-radius:20px;border:none;cursor:pointer;background:transparent;color:#aaa;font-weight:400;font-size:13px;font-family:Inter,sans-serif;">🛒 Shopping</button>
+      <button style="padding:7px 14px;border-radius:20px;border:none;cursor:pointer;background:transparent;color:#aaa;font-weight:400;font-size:13px;font-family:Inter,sans-serif;">🥫 Pantry</button>
+      <button style="padding:7px 14px;border-radius:20px;border:none;cursor:pointer;background:transparent;color:#aaa;font-weight:400;font-size:13px;font-family:Inter,sans-serif;">🌶 Spice Blends</button>
+    </div>
+  </div>
+
+  <h2>Component — Stat Cards</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:700px;">
+    <div style="background:white;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+      <div style="font-size:22px;margin-bottom:6px;">📋</div>
+      <div style="font-size:22px;font-weight:700;color:#1a1a1a;">10</div>
+      <div style="font-size:11px;color:#888;margin-top:2px;">Recipes</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+      <div style="font-size:22px;margin-bottom:6px;">💪</div>
+      <div style="font-size:22px;font-weight:700;color:#1a1a1a;">54g</div>
+      <div style="font-size:11px;color:#888;margin-top:2px;">Avg Protein / Serving</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+      <div style="font-size:22px;margin-bottom:6px;">💰</div>
+      <div style="font-size:22px;font-weight:700;color:#1a1a1a;">~$4.70</div>
+      <div style="font-size:11px;color:#888;margin-top:2px;">Avg Cost / Serving</div>
+    </div>
+    <div style="background:white;border-radius:12px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);">
+      <div style="font-size:22px;margin-bottom:6px;">🌶</div>
+      <div style="font-size:22px;font-weight:700;color:#1a1a1a;">4</div>
+      <div style="font-size:11px;color:#888;margin-top:2px;">Custom Spice Blends</div>
+    </div>
+  </div>
+
+  <h2>Component — Recipe Card</h2>
+  <div style="display:flex;gap:18px;flex-wrap:wrap;">
+    <!-- Card with orange accent -->
+    <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);width:300px;">
+      <div style="background:#e67e22;padding:24px 20px 18px;color:white;position:relative;">
+        <div style="position:absolute;top:12px;right:12px;background:white;color:#e67e22;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">5 servings</div>
+        <div style="font-size:32px;margin-bottom:6px;">🌮</div>
+        <div style="font-size:10px;font-weight:600;opacity:0.8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Mexican</div>
+        <div style="font-size:20px;font-weight:700;">Turkey Taco Bowls</div>
+        <div style="font-size:12px;opacity:0.85;margin-top:6px;">🕐 15 min prep · 20 min cook</div>
+      </div>
+      <div style="padding:14px 20px 18px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;">
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#fff3e0;">
+            <div style="font-size:14px;font-weight:700;color:#e67e22;">52g</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Protein</div>
+          </div>
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#f5f5f5;">
+            <div style="font-size:14px;font-weight:700;color:#333;">48g</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Carbs</div>
+          </div>
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#f5f5f5;">
+            <div style="font-size:14px;font-weight:700;color:#333;">14g</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Fat</div>
+          </div>
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#f5f5f5;">
+            <div style="font-size:14px;font-weight:700;color:#333;">540</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Cal</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:#666;">per serving</span>
+          <span style="font-size:11px;background:#f0f0f0;color:#555;padding:3px 8px;border-radius:10px;">🌶 Tex Mex Blend</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card with green accent -->
+    <div style="background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.07);width:300px;">
+      <div style="background:#27ae60;padding:24px 20px 18px;color:white;position:relative;">
+        <div style="position:absolute;top:12px;right:12px;background:white;color:#27ae60;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">6 servings</div>
+        <div style="font-size:32px;margin-bottom:6px;">🍝</div>
+        <div style="font-size:10px;font-weight:600;opacity:0.8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Italian</div>
+        <div style="font-size:20px;font-weight:700;">High Protein Pasta</div>
+        <div style="font-size:12px;opacity:0.85;margin-top:6px;">🕐 10 min prep · 25 min cook</div>
+      </div>
+      <div style="padding:14px 20px 18px;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;">
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#fff3e0;">
+            <div style="font-size:14px;font-weight:700;color:#e67e22;">58g</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Protein</div>
+          </div>
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#f5f5f5;">
+            <div style="font-size:14px;font-weight:700;color:#333;">62g</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Carbs</div>
+          </div>
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#f5f5f5;">
+            <div style="font-size:14px;font-weight:700;color:#333;">16g</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Fat</div>
+          </div>
+          <div style="text-align:center;padding:7px 2px;border-radius:8px;background:#f5f5f5;">
+            <div style="font-size:14px;font-weight:700;color:#333;">620</div>
+            <div style="font-size:10px;color:#999;margin-top:1px;">Cal</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:#666;">per serving</span>
+          <span style="font-size:11px;background:#f0f0f0;color:#555;padding:3px 8px;border-radius:10px;">🌶 Italian Herb Blend</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Component — Macro Pills (Detail View)</h2>
+  <div style="display:grid;grid-template-columns:repeat(4,200px);gap:10px;">
+    <div style="background:#fff3e0;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#e67e22;">52g</div>
+      <div style="font-size:11px;color:#777;margin-top:3px;">Protein / serving</div>
+    </div>
+    <div style="background:#e3f2fd;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#2980b9;">48g</div>
+      <div style="font-size:11px;color:#777;margin-top:3px;">Carbs / serving</div>
+    </div>
+    <div style="background:#e8f5e9;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#27ae60;">14g</div>
+      <div style="font-size:11px;color:#777;margin-top:3px;">Fat / serving</div>
+    </div>
+    <div style="background:#f3e5f5;border-radius:10px;padding:14px;text-align:center;">
+      <div style="font-size:22px;font-weight:700;color:#8e44ad;">540</div>
+      <div style="font-size:11px;color:#777;margin-top:3px;">Calories / serving</div>
+    </div>
+  </div>
+
+  <h2>Component — Badges & Tags</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+    <!-- Servings badge on card -->
+    <span style="background:white;color:#e67e22;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;border:1px solid #fce8c5;">5 servings</span>
+    <!-- Spice tag -->
+    <span style="font-size:11px;background:#f0f0f0;color:#555;padding:3px 8px;border-radius:10px;">🌶 Tex Mex Blend</span>
+    <!-- Combined badge -->
+    <span style="font-size:10px;background:#fff3e0;color:#e67e22;padding:1px 6px;border-radius:8px;font-weight:600;">combined ×2</span>
+    <!-- In pantry -->
+    <span style="font-size:10px;background:#e8f5e9;color:#2e7d32;padding:1px 6px;border-radius:8px;font-weight:600;">🥫 In pantry</span>
+    <!-- Running low -->
+    <span style="font-size:10px;background:#fff3e0;color:#e65100;padding:1px 6px;border-radius:8px;font-weight:600;">⚠ Running low</span>
+    <!-- Recipe toggle - active -->
+    <button style="padding:7px 14px;border-radius:20px;border:2px solid #e67e22;background:#e67e22;color:white;cursor:pointer;font-weight:600;font-size:12px;font-family:Inter,sans-serif;">🌮 Turkey Taco Bowls</button>
+    <!-- Recipe toggle - inactive -->
+    <button style="padding:7px 14px;border-radius:20px;border:2px solid #ddd;background:white;color:#666;cursor:pointer;font-weight:600;font-size:12px;font-family:Inter,sans-serif;">🍝 High Protein Pasta</button>
+  </div>
+
+  <h2>Component — Alert / Info Cards</h2>
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:600px;">
+    <div style="background:#e8f5e9;border-radius:10px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:#2e7d32;margin-bottom:5px;">💡 Tip</div>
+      <div style="font-size:12px;color:#388e3c;line-height:1.5;">Use a cast-iron skillet and don't crowd the pan — that's how you get a real crust.</div>
+    </div>
+    <div style="background:#fff8e1;border-radius:10px;padding:14px;">
+      <div style="font-size:12px;font-weight:700;color:#f57f17;margin-bottom:5px;">✨ vs. HelloFresh</div>
+      <div style="font-size:12px;color:#f9a825;line-height:1.5;">HelloFresh charges $13/serving for this. You're making it for ~$4.70 with better macros.</div>
+    </div>
+  </div>
+
+  <div style="height:60px;"></div>
+</body>
+</html>
