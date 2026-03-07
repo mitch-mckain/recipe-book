@@ -274,7 +274,7 @@ const recipes = [
     ingredients: [
       { item: "Lean ground beef (93/7)", amount: "600g", cost: "$8.00", cat: "protein" },
       { item: "Red lentil pasta", amount: "400g dry", cost: "$5.00", cat: "grains" },
-      { item: "Ricotta cheese (low fat)", amount: "250g", cost: "$3.50", cat: "protein" },
+      { item: "Plain Greek yogurt (2%)", amount: "250g", cost: "$2.50", cat: "protein" },
       { item: "Marinara sauce (jarred)", amount: "700ml jar", cost: "$4.00", cat: "pantry" },
       { item: "Parmesan cheese (grated)", amount: "60g", cost: "$2.50", cat: "protein" },
       { item: "Garlic (minced)", amount: "4 cloves", cost: "$0.30", cat: "produce" },
@@ -283,17 +283,17 @@ const recipes = [
       { item: "Italian Herb Blend", amount: "2 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Stir the ricotta until smooth. Set aside — it melts into the sauce and adds a creamy richness.",
+      "Measure out the Greek yogurt and set aside — add it off heat at the end so it doesn't curdle.",
       "Sauté onion in a large skillet over medium heat 5 min. Add garlic, cook 1 min.",
       "Add ground beef, break apart and brown well. Drain excess fat.",
       "Add Italian Herb Blend. Stir and cook 1 minute.",
-      "Pour in marinara sauce. Stir in ricotta — it melts right into the sauce and adds a creamy, slightly rich texture.",
-      "Simmer sauce on low 15 minutes. Stir in spinach in last 2 minutes until wilted. Adjust salt.",
+      "Pour in marinara sauce. Simmer on low 15 minutes. Stir in spinach in last 2 minutes until wilted. Adjust salt.",
+      "Remove from heat. Stir in Greek yogurt until fully incorporated — adding it off heat keeps it creamy and prevents curdling.",
       "Meanwhile cook red lentil pasta per package (usually 8–10 min). Drain, toss in sauce.",
       "Serve topped with grated parmesan.",
     ],
     prepTip: "Red lentil pasta has ~25g protein per 100g dry vs ~13g for regular pasta — that's your biggest protein lever here. Store sauce and pasta separately — pasta absorbs sauce overnight and gets mushy.",
-    helloFreshNote: "HelloFresh pasta dishes are often the lowest-protein option on their menu. Red lentil pasta alone nearly doubles the protein of regular pasta. Ricotta in the sauce keeps it creamy without the heavy cream.",
+    helloFreshNote: "HelloFresh pasta dishes are often the lowest-protein option on their menu. Red lentil pasta alone nearly doubles the protein of regular pasta. Greek yogurt stirred in off the heat keeps it creamy and adds extra protein without any heavy cream.",
     estimatedCost: "$26.40 total / ~$5.28 per serving",
   },
   {
@@ -342,12 +342,12 @@ const recipes = [
     macros: { protein: 48, carbs: 38, fat: 22, calories: 545 },
     spiceBlend: "Italian Herb Blend",
     ingredients: [
-      { item: "Ground lamb", amount: "500g", cost: "$10.00", cat: "protein" },
-      { item: "Whole wheat pita bread", amount: "4 large", cost: "$3.50", cat: "grains" },
+      { item: "Lean ground beef (93/7)", amount: "500g", cost: "$6.50", cat: "protein" },
+      { item: "Pita bread", amount: "4 large", cost: "$3.00", cat: "grains" },
       { item: "Greek yogurt (plain, full fat)", amount: "300g", cost: "$3.00", cat: "protein" },
       { item: "Cucumber (grated)", amount: "1 large", cost: "$1.00", cat: "produce" },
       { item: "Feta cheese", amount: "80g", cost: "$3.00", cat: "protein" },
-      { item: "Cherry tomatoes", amount: "200g", cost: "$2.50", cat: "produce" },
+      { item: "Tomato (sliced)", amount: "2 medium", cost: "$1.50", cat: "produce" },
       { item: "Red onion (sliced)", amount: "½ onion", cost: "$0.40", cat: "produce" },
       { item: "Lemon", amount: "1 lemon", cost: "$0.50", cat: "produce" },
       { item: "Garlic (minced)", amount: "3 cloves", cost: "$0.30", cat: "produce" },
@@ -355,15 +355,15 @@ const recipes = [
     ],
     steps: [
       "Make tzatziki: combine Greek yogurt, grated & squeezed cucumber, 1 garlic clove, lemon juice, salt. Refrigerate.",
-      "Mix lamb with Italian Herb Blend, remaining garlic, salt, and pepper.",
-      "Cook lamb in a skillet over medium-high, breaking apart, until browned (~10 min).",
+      "Mix ground beef with Italian Herb Blend, remaining garlic, salt, and pepper.",
+      "Cook ground beef in a skillet over medium-high, breaking apart, until browned (~10 min).",
       "Warm pitas in a dry pan or oven at 180°C for 2–3 minutes.",
       "Load each pita: tzatziki spread, lamb, cherry tomatoes, red onion, crumbled feta.",
       "Wrap tightly and serve immediately.",
     ],
     prepTip: "Prep lamb and tzatziki separately up to 3 days ahead. Assemble fresh — pitas go soggy if wrapped. Great for a fast assembly lunch.",
-    helloFreshNote: "HelloFresh's lamb wraps use a bottled sauce. Homemade tzatziki doubles the protein and takes 2 minutes to make.",
-    estimatedCost: "$24.20 total / ~$6.05 per serving",
+    helloFreshNote: "HelloFresh's lamb wraps use a bottled sauce. Swapping to ground beef keeps costs down without sacrificing flavour — homemade tzatziki doubles the protein and takes 2 minutes to make.",
+    estimatedCost: "$20.50 total / ~$5.13 per serving",
   },
   {
     id: 7,
@@ -379,7 +379,7 @@ const recipes = [
     ingredients: [
       { item: "Lean ground pork", amount: "600g", cost: "$7.00", cat: "protein" },
       { item: "Udon noodles (pre-cooked)", amount: "600g", cost: "$4.50", cat: "grains" },
-      { item: "Bok choy", amount: "4 heads", cost: "$4.00", cat: "produce" },
+      { item: "Broccoli florets", amount: "400g", cost: "$2.50", cat: "produce" },
       { item: "Eggs", amount: "2 large", cost: "$0.80", cat: "protein" },
       { item: "Chili oil", amount: "2 tbsp", cost: "$0.80", cat: "pantry" },
       { item: "Soy sauce (low sodium)", amount: "4 tbsp", cost: "$0.60", cat: "pantry" },
@@ -393,7 +393,7 @@ const recipes = [
       "Mix soy sauce, oyster sauce, rice vinegar, and chili oil in a small bowl. Set aside.",
       "Heat wok or large skillet over high. Add pork, break apart, cook until browned (~7 min). Remove and set aside.",
       "Add garlic and Korean Umami Blend to the same wok. Stir fry 30 seconds.",
-      "Add bok choy and cook 2 minutes until just wilted.",
+      "Add broccoli florets and cook 3–4 minutes until tender-crisp.",
       "Add udon noodles directly from package. Toss and heat through (~3 min).",
       "Push noodles aside, crack in eggs, scramble briefly, then fold everything together.",
       "Return pork to wok, pour over sauce, toss to coat. Top with green onions and extra chili oil.",
@@ -416,7 +416,7 @@ const recipes = [
     ingredients: [
       { item: "Lean ground beef (93/7)", amount: "700g", cost: "$9.00", cat: "protein" },
       { item: "Green or brown lentils (dry)", amount: "300g", cost: "$2.50", cat: "grains" },
-      { item: "Sweet potatoes (cubed)", amount: "600g", cost: "$3.50", cat: "produce" },
+      { item: "Potatoes (cubed)", amount: "600g", cost: "$2.00", cat: "produce" },
       { item: "Spinach (fresh or frozen)", amount: "200g", cost: "$2.50", cat: "produce" },
       { item: "Tahini", amount: "4 tbsp", cost: "$1.50", cat: "pantry" },
       { item: "Lemon", amount: "2 lemons", cost: "$1.00", cat: "produce" },
@@ -424,7 +424,7 @@ const recipes = [
       { item: "Smoky Chipotle Blend", amount: "2 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Preheat oven to 200°C. Toss sweet potato cubes with olive oil and 1 tbsp Chipotle Blend. Roast 25–30 min.",
+      "Preheat oven to 200°C. Toss potato cubes with olive oil and 1 tbsp Chipotle Blend. Roast 25–30 min.",
       "Rinse lentils, simmer in 2x water with a pinch of salt for 20–25 min until tender. Drain.",
       "Brown ground beef in a skillet over medium-high. Season with remaining Chipotle Blend. Cook until no pink remains.",
       "Stir spinach into the beef during last 2 minutes until wilted.",
@@ -452,7 +452,7 @@ const recipes = [
       { item: "Marinara sauce (jarred)", amount: "700ml jar", cost: "$4.00", cat: "pantry" },
       { item: "Parmesan cheese (grated)", amount: "50g", cost: "$2.00", cat: "protein" },
       { item: "Egg whites", amount: "2 large", cost: "$0.60", cat: "protein" },
-      { item: "Breadcrumbs (whole wheat)", amount: "3 tbsp", cost: "$0.40", cat: "grains" },
+      { item: "Breadcrumbs", amount: "3 tbsp", cost: "$0.40", cat: "grains" },
       { item: "Garlic (minced)", amount: "4 cloves", cost: "$0.30", cat: "produce" },
       { item: "Fresh basil (optional)", amount: "handful", cost: "$1.00", cat: "produce" },
       { item: "Italian Herb Blend", amount: "2 tsp", cost: "from jar", cat: "spice" },
@@ -575,6 +575,24 @@ function buildGrouped(selectedIds) {
   return grouped;
 }
 
+/* ─── SCALE INGREDIENT AMOUNTS ──────────────────────────── */
+function scaleAmount(amount, factor) {
+  if (factor === 1) return amount;
+  // Don't scale qualitative notes like "from jar" or "for topping"
+  if (/^(from|for)\s/i.test(amount)) return amount;
+  // Match a leading number
+  const m = amount.match(/^([\d.]+)(.*)/);
+  if (!m) return amount;
+  const scaled = parseFloat(m[1]) * factor;
+  // Round to a sensible precision
+  let nice;
+  if (scaled >= 100) nice = Math.round(scaled);
+  else if (scaled >= 10) nice = Math.round(scaled * 2) / 2;   // nearest 0.5
+  else nice = Math.round(scaled * 4) / 4;                     // nearest 0.25
+  const str = nice % 1 === 0 ? `${Math.round(nice)}` : `${nice}`;
+  return `${str}${m[2]}`;
+}
+
 function formatForShare(selectedIds, grouped, inventory) {
   const getStock = (item) => inventory[item] || 0;
   const names = recipes.filter((r) => selectedIds.includes(r.id)).map((r) => r.name);
@@ -619,6 +637,10 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [blendMode, setBlendMode] = useState("single");
   const [selectedBlend, setSelectedBlend] = useState(null);
+  const [customServings, setCustomServings] = useState(null);
+
+  // Reset serving size whenever a different recipe is opened
+  useEffect(() => { setCustomServings(null); }, [selectedRecipe]);
 
   // These three sync to Firestore in real-time across all devices
   const [checked, setChecked] = useCloudState(uid, "checked", {});
@@ -668,6 +690,8 @@ export default function App() {
   const getStock = (item) => inventory[item] || 0;
   const setStock = (item, level) => setInventory((p) => ({ ...p, [item]: level }));
   const grouped = buildGrouped(selectedIds);
+  const displayServings = customServings ?? (selectedRecipe?.servings ?? 1);
+  const scaleFactor = selectedRecipe ? displayServings / selectedRecipe.servings : 1;
 
   const handleShare = async () => {
     const text = formatForShare(selectedIds, grouped, inventory);
@@ -816,6 +840,22 @@ export default function App() {
               </div>
             </div>
 
+            {/* Servings slider */}
+            <div style={{ background: "white", borderRadius: "12px", padding: "14px 18px", marginBottom: "14px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", gap: "14px" }}>
+              <span style={{ fontSize: "13px", fontWeight: "600", color: "#555", whiteSpace: "nowrap" }}>👥 Servings</span>
+              <input
+                type="range" min="1" max="8" value={displayServings}
+                onChange={(e) => setCustomServings(Number(e.target.value))}
+                style={{ flex: 1, accentColor: selectedRecipe.color, cursor: "pointer" }}
+              />
+              <div style={{ minWidth: "28px", textAlign: "center", fontSize: "18px", fontWeight: "700", color: selectedRecipe.color }}>{displayServings}</div>
+              {customServings !== null && (
+                <button onClick={() => setCustomServings(null)} style={{ fontSize: "11px", color: "#aaa", background: "none", border: "1px solid #ddd", borderRadius: "8px", padding: "3px 8px", cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Reset
+                </button>
+              )}
+            </div>
+
             {/* Macros */}
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: "8px", marginBottom: "16px" }}>
               {[
@@ -839,7 +879,7 @@ export default function App() {
                   <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: i < selectedRecipe.ingredients.length - 1 ? "1px solid #f5f5f5" : "none" }}>
                     <div>
                       <div style={{ fontSize: "13px", fontWeight: "500", color: "#333" }}>{ing.item}</div>
-                      <div style={{ fontSize: "11px", color: "#aaa" }}>{ing.amount}</div>
+                      <div style={{ fontSize: "11px", color: "#aaa" }}>{scaleAmount(ing.amount, scaleFactor)}</div>
                     </div>
                     <div style={{ fontSize: "12px", color: "#666" }}>{ing.cost}</div>
                   </div>
