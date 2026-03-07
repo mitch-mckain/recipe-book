@@ -1,19 +1,41 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { auth, provider, db } from "./firebase";
+import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
-/* ─── PERSIST TO LOCAL STORAGE ──────────────────────────── */
-function useLocalStorage(key, defaultValue) {
-  const [value, setValue] = useState(() => {
-    try {
-      const stored = localStorage.getItem(key);
-      return stored !== null ? JSON.parse(stored) : defaultValue;
-    } catch {
-      return defaultValue;
-    }
-  });
+/* ─── CLOUD SYNC HOOK ────────────────────────────────────── */
+// Syncs a single field of the user's Firestore document in real-time.
+// Changes from other devices arrive automatically via onSnapshot.
+function useCloudState(uid, key, defaultValue) {
+  const [value, setValue] = useState(defaultValue);
+
+  // Listen for real-time updates from Firestore (including other devices)
   useEffect(() => {
-    try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
-  }, [key, value]);
-  return [value, setValue];
+    if (!uid) { setValue(defaultValue); return; }
+    const ref = doc(db, "users", uid);
+    const unsub = onSnapshot(ref, (snap) => {
+      // hasPendingWrites = true means this event was triggered by our own local write.
+      // Skip it — we already updated local state optimistically.
+      if (snap.metadata.hasPendingWrites) return;
+      if (snap.exists() && snap.data()[key] !== undefined) {
+        setValue(snap.data()[key]);
+      }
+    });
+    return unsub;
+  }, [uid, key]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Update local state immediately AND write to Firestore in the background
+  const setAndSync = useCallback((newValOrFn) => {
+    setValue((prev) => {
+      const next = typeof newValOrFn === "function" ? newValOrFn(prev) : newValOrFn;
+      if (uid) {
+        setDoc(doc(db, "users", uid), { [key]: next }, { merge: true }).catch(console.error);
+      }
+      return next;
+    });
+  }, [uid, key]);
+
+  return [value, setAndSync];
 }
 
 /* ─── MOBILE DETECTION ───────────────────────────────────── */
@@ -577,15 +599,71 @@ function formatForShare(selectedIds, grouped, inventory) {
 export default function App() {
   const isMobile = useIsMobile();
 
+  /* ── AUTH STATE ── */
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setAuthLoading(false);
+    });
+    return unsub;
+  }, []);
+
+  const uid = user?.uid ?? null;
+
+  /* ── APP STATE ── */
   const [view, setView] = useState("home");
   const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [copied, setCopied] = useState(false);
   const [blendMode, setBlendMode] = useState("single");
   const [selectedBlend, setSelectedBlend] = useState(null);
 
-  const [checked, setChecked] = useLocalStorage("rb_checked", {});
-  const [selectedIds, setSelectedIds] = useLocalStorage("rb_selectedIds", recipes.map((r) => r.id));
-  const [inventory, setInventory] = useLocalStorage("rb_inventory", {});
+  // These three sync to Firestore in real-time across all devices
+  const [checked, setChecked] = useCloudState(uid, "checked", {});
+  const [selectedIds, setSelectedIds] = useCloudState(uid, "selectedIds", recipes.map((r) => r.id));
+  const [inventory, setInventory] = useCloudState(uid, "inventory", {});
+
+  /* ── AUTH SCREENS ── */
+  if (authLoading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center",
+        height: "100vh", background: "#111", color: "#fff", fontFamily: "'Inter', sans-serif" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "48px", marginBottom: "16px" }}>📖</div>
+          <div style={{ color: "#888" }}>Loading…</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center",
+        alignItems: "center", height: "100vh", background: "#111", color: "#fff",
+        fontFamily: "'Inter', sans-serif", gap: "20px", padding: "32px", textAlign: "center" }}>
+        <div style={{ fontSize: "56px" }}>📖</div>
+        <div>
+          <div style={{ fontSize: "24px", fontWeight: "700", marginBottom: "8px" }}>Mitch's Recipe Book</div>
+          <div style={{ color: "#888", fontSize: "15px" }}>Sign in to sync your pantry and shopping list across all your devices.</div>
+        </div>
+        <button
+          onClick={() => signInWithPopup(auth, provider)}
+          style={{ background: "#fff", color: "#111", border: "none", borderRadius: "10px",
+            padding: "14px 28px", fontSize: "16px", fontWeight: "600", cursor: "pointer",
+            display: "flex", alignItems: "center", gap: "10px", marginTop: "8px" }}>
+          <svg width="18" height="18" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          Sign in with Google
+        </button>
+      </div>
+    );
+  }
 
   const getStock = (item) => inventory[item] || 0;
   const setStock = (item, level) => setInventory((p) => ({ ...p, [item]: level }));
@@ -632,19 +710,25 @@ export default function App() {
             {!isMobile && <div style={{ fontSize: "11px", color: "#777" }}>10 High-Protein Meals · 4 Custom Spice Blends</div>}
           </div>
         </div>
-        {/* Desktop nav buttons */}
-        {!isMobile && (
-          <div style={{ display: "flex", gap: "6px" }}>
-            {navItems.map((n) => (
-              <button key={n.id} onClick={() => navigate(n.id)} style={{
-                padding: "7px 14px", borderRadius: "20px", border: "none", cursor: "pointer",
-                background: view === n.id ? "white" : "transparent",
-                color: view === n.id ? "#1a1a1a" : "#aaa",
-                fontWeight: view === n.id ? "600" : "400", fontSize: "13px",
-              }}>{n.label}</button>
-            ))}
-          </div>
-        )}
+        {/* Desktop nav buttons + sign-out */}
+        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          {!isMobile && navItems.map((n) => (
+            <button key={n.id} onClick={() => navigate(n.id)} style={{
+              padding: "7px 14px", borderRadius: "20px", border: "none", cursor: "pointer",
+              background: view === n.id ? "white" : "transparent",
+              color: view === n.id ? "#1a1a1a" : "#aaa",
+              fontWeight: view === n.id ? "600" : "400", fontSize: "13px",
+            }}>{n.label}</button>
+          ))}
+          <button
+            onClick={() => signOut(auth)}
+            title={`Signed in as ${user.email}`}
+            style={{ marginLeft: isMobile ? "0" : "8px", background: "transparent", border: "1px solid #444",
+              borderRadius: "20px", color: "#aaa", fontSize: "11px", padding: "5px 10px",
+              cursor: "pointer", whiteSpace: "nowrap" }}>
+            {isMobile ? "↪" : "Sign out"}
+          </button>
+        </div>
       </div>
 
       {/* ── SCROLLABLE CONTENT ── */}
