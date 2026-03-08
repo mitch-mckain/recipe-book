@@ -776,12 +776,12 @@ export default function App() {
             }}>{n.label}</button>
           ))}
           <button
-            onClick={() => signOut(auth)}
-            title={`Signed in as ${user.email}`}
+            onClick={() => { if (user) signOut(auth); setIsGuest(false); }}
+            title={user ? `Signed in as ${user.email}` : "Guest mode"}
             style={{ marginLeft: isMobile ? "0" : "8px", background: "transparent", border: "1px solid #444",
               borderRadius: "20px", color: "#aaa", fontSize: "11px", padding: "5px 10px",
               cursor: "pointer", whiteSpace: "nowrap" }}>
-            {isMobile ? "↪" : "Sign out"}
+            {isMobile ? "↪" : (user ? "Sign out" : "Sign in")}
           </button>
         </div>
       </div>
