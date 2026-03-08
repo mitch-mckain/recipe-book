@@ -4,18 +4,34 @@ import { signInWithPopup, signOut, onAuthStateChanged } from "firebase/auth";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 
 /* ─── CLOUD SYNC HOOK ────────────────────────────────────── */
-// Syncs a single field of the user's Firestore document in real-time.
-// Changes from other devices arrive automatically via onSnapshot.
+// Signed-in users: syncs to Firestore in real-time across devices.
+// Guests (uid = null): falls back to localStorage so changes persist locally.
 function useCloudState(uid, key, defaultValue) {
-  const [value, setValue] = useState(defaultValue);
+  const lsKey = `rb_${key}`;
 
-  // Listen for real-time updates from Firestore (including other devices)
+  const [value, setValue] = useState(() => {
+    if (!uid) {
+      // Guest: load from localStorage
+      try {
+        const stored = localStorage.getItem(lsKey);
+        return stored !== null ? JSON.parse(stored) : defaultValue;
+      } catch { return defaultValue; }
+    }
+    return defaultValue;
+  });
+
+  // Guest: persist to localStorage whenever value changes
   useEffect(() => {
-    if (!uid) { setValue(defaultValue); return; }
+    if (!uid) {
+      try { localStorage.setItem(lsKey, JSON.stringify(value)); } catch {}
+    }
+  }, [uid, lsKey, value]);
+
+  // Signed-in: listen for real-time Firestore updates (from other devices)
+  useEffect(() => {
+    if (!uid) return;
     const ref = doc(db, "users", uid);
     const unsub = onSnapshot(ref, (snap) => {
-      // hasPendingWrites = true means this event was triggered by our own local write.
-      // Skip it — we already updated local state optimistically.
       if (snap.metadata.hasPendingWrites) return;
       if (snap.exists() && snap.data()[key] !== undefined) {
         setValue(snap.data()[key]);
@@ -24,16 +40,17 @@ function useCloudState(uid, key, defaultValue) {
     return unsub;
   }, [uid, key]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Update local state immediately AND write to Firestore in the background
   const setAndSync = useCallback((newValOrFn) => {
     setValue((prev) => {
       const next = typeof newValOrFn === "function" ? newValOrFn(prev) : newValOrFn;
       if (uid) {
         setDoc(doc(db, "users", uid), { [key]: next }, { merge: true }).catch(console.error);
+      } else {
+        try { localStorage.setItem(lsKey, JSON.stringify(next)); } catch {}
       }
       return next;
     });
-  }, [uid, key]);
+  }, [uid, key, lsKey]);
 
   return [value, setAndSync];
 }
@@ -274,7 +291,7 @@ const recipes = [
     ingredients: [
       { item: "Lean ground beef (93/7)", amount: "600g", cost: "$8.00", cat: "protein" },
       { item: "Red lentil pasta", amount: "400g dry", cost: "$5.00", cat: "grains" },
-      { item: "Plain Greek yogurt (2%)", amount: "250g", cost: "$2.50", cat: "protein" },
+      { item: "Greek yogurt (plain)", amount: "250g", cost: "$2.50", cat: "protein" },
       { item: "Marinara sauce (jarred)", amount: "700ml jar", cost: "$4.00", cat: "pantry" },
       { item: "Parmesan cheese (grated)", amount: "60g", cost: "$2.50", cat: "protein" },
       { item: "Garlic (minced)", amount: "4 cloves", cost: "$0.30", cat: "produce" },
@@ -344,7 +361,7 @@ const recipes = [
     ingredients: [
       { item: "Lean ground beef (93/7)", amount: "500g", cost: "$6.50", cat: "protein" },
       { item: "Pita bread", amount: "4 large", cost: "$3.00", cat: "grains" },
-      { item: "Greek yogurt (plain, full fat)", amount: "300g", cost: "$3.00", cat: "protein" },
+      { item: "Greek yogurt (plain)", amount: "300g", cost: "$3.00", cat: "protein" },
       { item: "Cucumber (grated)", amount: "1 large", cost: "$1.00", cat: "produce" },
       { item: "Feta cheese", amount: "80g", cost: "$3.00", cat: "protein" },
       { item: "Tomato (sliced)", amount: "2 medium", cost: "$1.50", cat: "produce" },
@@ -620,6 +637,7 @@ export default function App() {
   /* ── AUTH STATE ── */
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -629,6 +647,7 @@ export default function App() {
     return unsub;
   }, []);
 
+  // Signed-in users get a uid for Firestore; guests get null (localStorage fallback)
   const uid = user?.uid ?? null;
 
   /* ── APP STATE ── */
@@ -653,28 +672,28 @@ export default function App() {
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center",
         height: "100vh", background: "#111", color: "#fff", fontFamily: "'Inter', sans-serif" }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: "48px", marginBottom: "16px" }}>📖</div>
+          <img src="/apple-touch-icon.png" alt="Recipe Book" style={{ width: "90px", height: "90px", borderRadius: "20px", marginBottom: "16px", boxShadow: "0 4px 20px rgba(0,0,0,0.4)" }} />
           <div style={{ color: "#888" }}>Loading…</div>
         </div>
       </div>
     );
   }
 
-  if (!user) {
+  if (!user && !isGuest) {
     return (
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center",
         alignItems: "center", height: "100vh", background: "#111", color: "#fff",
         fontFamily: "'Inter', sans-serif", gap: "20px", padding: "32px", textAlign: "center" }}>
-        <div style={{ fontSize: "56px" }}>📖</div>
+        <img src="/apple-touch-icon.png" alt="Recipe Book" style={{ width: "110px", height: "110px", borderRadius: "24px", boxShadow: "0 6px 28px rgba(0,0,0,0.5)" }} />
         <div>
-          <div style={{ fontSize: "24px", fontWeight: "700", marginBottom: "8px" }}>Mitch's Recipe Book</div>
-          <div style={{ color: "#888", fontSize: "15px" }}>Sign in to sync your pantry and shopping list across all your devices.</div>
+          <div style={{ fontSize: "26px", fontWeight: "700", marginBottom: "8px" }}>Mitch's Recipe Book</div>
+          <div style={{ color: "#888", fontSize: "15px" }}>Sign in to sync your pantry across all your devices.</div>
         </div>
         <button
           onClick={() => signInWithPopup(auth, provider)}
           style={{ background: "#fff", color: "#111", border: "none", borderRadius: "10px",
             padding: "14px 28px", fontSize: "16px", fontWeight: "600", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "10px", marginTop: "8px" }}>
+            display: "flex", alignItems: "center", gap: "10px" }}>
           <svg width="18" height="18" viewBox="0 0 48 48">
             <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
             <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -683,6 +702,15 @@ export default function App() {
           </svg>
           Sign in with Google
         </button>
+        <button
+          onClick={() => setIsGuest(true)}
+          style={{ background: "transparent", color: "#888", border: "1px solid #444",
+            borderRadius: "10px", padding: "12px 28px", fontSize: "15px", cursor: "pointer" }}>
+          Continue as Guest
+        </button>
+        <div style={{ color: "#555", fontSize: "12px", maxWidth: "280px" }}>
+          Guest mode saves your pantry on this device only.
+        </div>
       </div>
     );
   }
@@ -723,7 +751,10 @@ export default function App() {
       {/* ── TOP NAV ── */}
       <div style={{
         background: "#1a1a1a", color: "white",
-        padding: isMobile ? "12px 16px" : "14px 24px",
+        paddingTop: isMobile ? "calc(12px + env(safe-area-inset-top))" : "14px",
+        paddingBottom: isMobile ? "12px" : "14px",
+        paddingLeft: isMobile ? "16px" : "24px",
+        paddingRight: isMobile ? "16px" : "24px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
       }}>
