@@ -962,6 +962,50 @@ function scaleAmount(amount, factor) {
   return `${str}${m[2]}`;
 }
 
+/* ─── SCALE INSTRUCTION TEXT ────────────────────────────── */
+// Finds measurement quantities inside step instruction strings and scales them.
+// Handles unicode fractions (½ ⅓ ¼ etc.), mixed numbers (1½), and the units:
+// tbsp, tsp, cup/cups, g, kg, ml, oz, lb/lbs.
+// Deliberately skips time (min, hours) and temperature (°C, °F).
+function scaleInstructionText(text, factor) {
+  if (factor === 1) return text;
+
+  const FRAC_TO_NUM = { '½': 0.5, '⅓': 1/3, '⅔': 2/3, '¼': 0.25, '¾': 0.75, '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875 };
+  const NUM_TO_FRAC = [[0.75,'¾'],[2/3,'⅔'],[0.5,'½'],[1/3,'⅓'],[0.25,'¼']];
+
+  function parseFracNum(s) {
+    s = s.trim();
+    if (FRAC_TO_NUM[s] !== undefined) return FRAC_TO_NUM[s];
+    const mixed = s.match(/^(\d+)([½⅓⅔¼¾⅛⅜⅝⅞])$/);
+    if (mixed) return parseInt(mixed[1]) + FRAC_TO_NUM[mixed[2]];
+    return parseFloat(s);
+  }
+
+  function formatNice(n) {
+    if (n >= 100) return `${Math.round(n)}`;
+    if (n >= 10) n = Math.round(n * 2) / 2;
+    else n = Math.round(n * 4) / 4;
+    const whole = Math.floor(n);
+    const frac = n - whole;
+    for (const [val, ch] of NUM_TO_FRAC) {
+      if (Math.abs(frac - val) < 0.04) {
+        return whole > 0 ? `${whole}${ch}` : ch;
+      }
+    }
+    return n % 1 === 0 ? `${Math.round(n)}` : `${n}`;
+  }
+
+  // Match a number (with optional unicode fraction) immediately before a measurement unit
+  return text.replace(
+    /(\d+[½⅓⅔¼¾⅛⅜⅝⅞]?|[½⅓⅔¼¾⅛⅜⅝⅞])\s*(tbsp|tsp|cups?|g(?=\b)|kg(?=\b)|ml(?=\b)|oz(?=\b)|lbs?(?=\b))/g,
+    (match, num, unit) => {
+      const value = parseFracNum(num);
+      if (isNaN(value)) return match;
+      return `${formatNice(value * factor)} ${unit}`;
+    }
+  );
+}
+
 function formatForShare(selectedIds, grouped, inventory) {
   const getStock = (item) => inventory[item] || 0;
   const names = recipes.filter((r) => selectedIds.includes(r.id)).map((r) => r.name);
@@ -1284,7 +1328,7 @@ export default function App() {
                           return (
                             <li key={j} style={{ fontSize: isMobile ? "13px" : "14px", color: isTip ? "#92400e" : "#444", lineHeight: "1.55", display: "flex", gap: "8px", background: isTip ? "#fef3c7" : "transparent", borderRadius: isTip ? "6px" : "0", padding: isTip ? "6px 8px" : "0", fontStyle: isTip ? "italic" : "normal" }}>
                               {!isTip && <span style={{ color: selectedRecipe.color, fontWeight: "700", flexShrink: 0, marginTop: "1px" }}>•</span>}
-                              <span>{inst}</span>
+                              <span>{scaleInstructionText(inst, scaleFactor)}</span>
                             </li>
                           );
                         })}
