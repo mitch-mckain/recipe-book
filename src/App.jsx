@@ -944,68 +944,6 @@ function buildGrouped(selectedIds) {
   return grouped;
 }
 
-/* ─── SCALE INGREDIENT AMOUNTS ──────────────────────────── */
-function scaleAmount(amount, factor) {
-  if (factor === 1) return amount;
-  // Don't scale qualitative notes like "from jar" or "for topping"
-  if (/^(from|for)\s/i.test(amount)) return amount;
-  // Match a leading number
-  const m = amount.match(/^([\d.]+)(.*)/);
-  if (!m) return amount;
-  const scaled = parseFloat(m[1]) * factor;
-  // Round to a sensible precision
-  let nice;
-  if (scaled >= 100) nice = Math.round(scaled);
-  else if (scaled >= 10) nice = Math.round(scaled * 2) / 2;   // nearest 0.5
-  else nice = Math.round(scaled * 4) / 4;                     // nearest 0.25
-  const str = nice % 1 === 0 ? `${Math.round(nice)}` : `${nice}`;
-  return `${str}${m[2]}`;
-}
-
-/* ─── SCALE INSTRUCTION TEXT ────────────────────────────── */
-// Finds measurement quantities inside step instruction strings and scales them.
-// Handles unicode fractions (½ ⅓ ¼ etc.), mixed numbers (1½), and the units:
-// tbsp, tsp, cup/cups, g, kg, ml, oz, lb/lbs.
-// Deliberately skips time (min, hours) and temperature (°C, °F).
-function scaleInstructionText(text, factor) {
-  if (factor === 1) return text;
-
-  const FRAC_TO_NUM = { '½': 0.5, '⅓': 1/3, '⅔': 2/3, '¼': 0.25, '¾': 0.75, '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875 };
-  const NUM_TO_FRAC = [[0.75,'¾'],[2/3,'⅔'],[0.5,'½'],[1/3,'⅓'],[0.25,'¼']];
-
-  function parseFracNum(s) {
-    s = s.trim();
-    if (FRAC_TO_NUM[s] !== undefined) return FRAC_TO_NUM[s];
-    const mixed = s.match(/^(\d+)([½⅓⅔¼¾⅛⅜⅝⅞])$/);
-    if (mixed) return parseInt(mixed[1]) + FRAC_TO_NUM[mixed[2]];
-    return parseFloat(s);
-  }
-
-  function formatNice(n) {
-    if (n >= 100) return `${Math.round(n)}`;
-    if (n >= 10) n = Math.round(n * 2) / 2;
-    else n = Math.round(n * 4) / 4;
-    const whole = Math.floor(n);
-    const frac = n - whole;
-    for (const [val, ch] of NUM_TO_FRAC) {
-      if (Math.abs(frac - val) < 0.04) {
-        return whole > 0 ? `${whole}${ch}` : ch;
-      }
-    }
-    return n % 1 === 0 ? `${Math.round(n)}` : `${n}`;
-  }
-
-  // Match a number (with optional unicode fraction) immediately before a measurement unit
-  return text.replace(
-    /(\d+[½⅓⅔¼¾⅛⅜⅝⅞]?|[½⅓⅔¼¾⅛⅜⅝⅞])\s*(tbsp|tsp|cups?|g(?=\b)|kg(?=\b)|ml(?=\b)|oz(?=\b)|lbs?(?=\b))/g,
-    (match, num, unit) => {
-      const value = parseFracNum(num);
-      if (isNaN(value)) return match;
-      return `${formatNice(value * factor)} ${unit}`;
-    }
-  );
-}
-
 function formatForShare(selectedIds, grouped, inventory) {
   const getStock = (item) => inventory[item] || 0;
   const names = recipes.filter((r) => selectedIds.includes(r.id)).map((r) => r.name);
@@ -1052,11 +990,6 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [blendMode, setBlendMode] = useState("single");
   const [selectedBlend, setSelectedBlend] = useState(null);
-  const [customServings, setCustomServings] = useState(null);
-
-  // Reset serving size whenever a different recipe is opened
-  useEffect(() => { setCustomServings(null); }, [selectedRecipe]);
-
   // These three sync to Firestore in real-time across all devices
   const [checked, setChecked] = useCloudState(uid, "checked", {});
   const [selectedIds, setSelectedIds] = useCloudState(uid, "selectedIds", recipes.map((r) => r.id));
@@ -1114,9 +1047,6 @@ export default function App() {
   const getStock = (item) => inventory[item] || 0;
   const setStock = (item, level) => setInventory((p) => ({ ...p, [item]: level }));
   const grouped = buildGrouped(selectedIds);
-  const displayServings = customServings ?? (selectedRecipe?.servings ?? 1);
-  const scaleFactor = selectedRecipe ? displayServings / selectedRecipe.servings : 1;
-
   const handleShare = async () => {
     const text = formatForShare(selectedIds, grouped, inventory);
     if (navigator.share) {
@@ -1267,22 +1197,6 @@ export default function App() {
               </div>
             </div>
 
-            {/* Servings slider */}
-            <div style={{ background: "white", borderRadius: "12px", padding: "14px 18px", marginBottom: "14px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", display: "flex", alignItems: "center", gap: "14px" }}>
-              <span style={{ fontSize: "13px", fontWeight: "600", color: "#555", whiteSpace: "nowrap" }}>👥 Servings</span>
-              <input
-                type="range" min="1" max="8" value={displayServings}
-                onChange={(e) => setCustomServings(Number(e.target.value))}
-                style={{ flex: 1, accentColor: selectedRecipe.color, cursor: "pointer" }}
-              />
-              <div style={{ minWidth: "28px", textAlign: "center", fontSize: "18px", fontWeight: "700", color: selectedRecipe.color }}>{displayServings}</div>
-              {customServings !== null && (
-                <button onClick={() => setCustomServings(null)} style={{ fontSize: "11px", color: "#aaa", background: "none", border: "1px solid #ddd", borderRadius: "8px", padding: "3px 8px", cursor: "pointer", whiteSpace: "nowrap" }}>
-                  Reset
-                </button>
-              )}
-            </div>
-
             {/* Macros */}
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2,1fr)" : "repeat(4,1fr)", gap: "8px", marginBottom: "16px" }}>
               {[
@@ -1306,7 +1220,7 @@ export default function App() {
                   <div key={i} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: i < selectedRecipe.ingredients.length - 1 ? "1px solid #f5f5f5" : "none" }}>
                     <div>
                       <div style={{ fontSize: "13px", fontWeight: "500", color: "#333" }}>{ing.item}</div>
-                      <div style={{ fontSize: "11px", color: "#aaa" }}>{scaleAmount(ing.amount, scaleFactor)}</div>
+                      <div style={{ fontSize: "11px", color: "#aaa" }}>{ing.amount}</div>
                     </div>
                     <div style={{ fontSize: "12px", color: "#666" }}>{ing.cost}</div>
                   </div>
@@ -1328,7 +1242,7 @@ export default function App() {
                           return (
                             <li key={j} style={{ fontSize: isMobile ? "13px" : "14px", color: isTip ? "#92400e" : "#444", lineHeight: "1.55", display: "flex", gap: "8px", background: isTip ? "#fef3c7" : "transparent", borderRadius: isTip ? "6px" : "0", padding: isTip ? "6px 8px" : "0", fontStyle: isTip ? "italic" : "normal" }}>
                               {!isTip && <span style={{ color: selectedRecipe.color, fontWeight: "700", flexShrink: 0, marginTop: "1px" }}>•</span>}
-                              <span>{scaleInstructionText(inst, scaleFactor)}</span>
+                              <span>{inst}</span>
                             </li>
                           );
                         })}
