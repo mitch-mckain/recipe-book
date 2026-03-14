@@ -190,12 +190,41 @@ const recipes = [
       { item: "Tex Mex Blend", amount: "2 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Dice onion and bell peppers. Sauté in a large skillet with a splash of oil over medium heat for 5 minutes.",
-      "Add ground turkey. Break apart and cook until browned (~8 min).",
-      "Add Tex Mex Blend and canned tomatoes. Stir to combine and simmer 5 minutes.",
-      "Stir in drained black beans. Cook 3 more minutes until heated through.",
-      "Cook jasmine rice per package instructions. Season with a squeeze of lime.",
-      "Portion into 4 containers: rice base, turkey taco mix on top. Serve with Greek yogurt instead of sour cream.",
+      {
+        title: "Prep",
+        instructions: [
+          "Wash and dry all produce.",
+          "Dice onion into ½-inch pieces. Core and dice bell peppers into ½-inch pieces.",
+          "Drain and rinse black beans. Halve both limes.",
+        ],
+      },
+      {
+        title: "Cook the rice",
+        instructions: [
+          "Add 240g (1¼ cups) jasmine rice and 360ml (1½ cups) cold water to a medium pot. Add ¼ tsp salt.",
+          "Bring to a boil over high heat, then reduce to the lowest simmer. Cover tightly and cook 15 min — do not lift the lid.",
+          "Remove from heat. Let steam, covered, for 5 min. Fluff with a fork. Squeeze juice from half a lime over the rice and stir through.",
+        ],
+      },
+      {
+        title: "Cook the turkey",
+        instructions: [
+          "Heat 1 tbsp oil in a large skillet over medium-high heat.",
+          "Add diced onion and bell peppers. Cook, stirring occasionally, until softened and lightly golden, 5 min.",
+          "Add ground turkey. Break apart with a wooden spoon and cook until no pink remains, 7–8 min. Drain excess fat.",
+          "Add 2 tbsp Tex Mex Blend and ½ tsp salt. Stir and cook 1 min until fragrant.",
+          "Pour in drained black beans and canned tomatoes. Stir to combine and simmer on medium-low for 5 min.",
+        ],
+      },
+      {
+        title: "Portion and serve",
+        instructions: [
+          "Divide rice evenly between 4 bowls or meal-prep containers.",
+          "Top each with an equal portion of turkey taco mix.",
+          "Serve with a generous dollop of plain Greek yogurt in place of sour cream and a lime wedge on the side.",
+          "(TIP: Add sliced avocado fresh when eating — don't add during meal prep or it will brown.)",
+        ],
+      },
     ],
     prepTip: "Stores 5 days in fridge. Add sliced avocado fresh when eating. Greek yogurt is a swap for sour cream that adds ~6g protein per dollop.",
     helloFreshNote: "HelloFresh's taco bowls use small portions and a premixed packet. Jasmine rice keeps it satisfying and your own Tex Mex Blend gives you full control over the flavour and heat level.",
@@ -228,13 +257,45 @@ const recipes = [
       { item: "Lime", amount: "1 lime", cost: "$0.40", cat: "produce" },
     ],
     steps: [
-      "Sauté onion, bell pepper, and jalapeño in a large pot over medium-high heat for 5 minutes.",
-      "Add garlic, cook 1 minute. Add ground turkey and break apart — cook until no pink remains (~8 min).",
-      "Stir in Tex Mex Blend. Cook 1 minute until fragrant.",
-      "Add diced tomatoes, chicken broth, black beans, and kidney beans. Stir well.",
-      "Bring to a boil, then reduce to a low simmer. Cook uncovered for 20 minutes, stirring occasionally.",
-      "Stir in frozen corn. Simmer 5 more minutes. Adjust seasoning with salt, lime juice, and extra cayenne.",
-      "Serve topped with Greek yogurt, avocado (optional), and lime wedge.",
+      {
+        title: "Prep",
+        instructions: [
+          "Wash and dry all produce.",
+          "Dice onion and bell pepper into ½-inch pieces. Finely dice jalapeño — remove seeds for mild heat, keep them for hot.",
+          "Mince 3 garlic cloves. Drain and rinse black beans and kidney beans. Halve lime.",
+        ],
+      },
+      {
+        title: "Build the base",
+        instructions: [
+          "Heat 1 tbsp oil in a large pot or Dutch oven over medium-high heat.",
+          "Add onion, bell pepper, and jalapeño. Cook, stirring occasionally, until softened, 5 min.",
+          "Add minced garlic. Cook, stirring constantly, 1 min until fragrant.",
+        ],
+      },
+      {
+        title: "Brown the turkey",
+        instructions: [
+          "Add 500g ground turkey to the pot. Break apart with a wooden spoon and cook until no pink remains, 7–8 min.",
+          "Stir in 2 tbsp Tex Mex Blend and ½ tsp salt. Cook 1 min until fragrant.",
+        ],
+      },
+      {
+        title: "Simmer the chili",
+        instructions: [
+          "Add canned tomatoes, 350ml (1½ cups) chicken broth, black beans, and kidney beans. Stir well to combine.",
+          "Bring to a boil over high heat, then reduce to a steady low simmer. Cook uncovered 20 min, stirring occasionally.",
+          "Stir in 150g frozen corn. Simmer 5 more min.",
+          "Taste and adjust: add more salt, a squeeze of lime juice, or a pinch of cayenne as needed.",
+        ],
+      },
+      {
+        title: "Serve",
+        instructions: [
+          "Ladle into bowls. Top with a dollop of Greek yogurt, sliced avocado (optional), and a lime wedge.",
+          "(TIP: This chili gets better the next day as flavours meld. Make a batch Sunday and eat well all week. Freezes perfectly for up to 3 months.)",
+        ],
+      },
     ],
     prepTip: "This is arguably the best meal-prep recipe in the book. Make a huge batch — it freezes perfectly for up to 3 months. Gets better overnight as flavours develop.",
     helloFreshNote: "HelloFresh chilis are usually single-can bean portions with modest spice. Doubling the beans, using your own Tex Mex blend, and adding Greek yogurt instead of sour cream pushes this protein way higher.",
@@ -265,13 +326,50 @@ const recipes = [
       { item: "Smoky Chipotle Blend", amount: "2 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Make chipotle sauce: mix Greek yogurt, 1 tsp Smoky Chipotle Blend, squeeze of lime, pinch of salt. Refrigerate.",
-      "Combine turkey, egg white, and remaining Chipotle Blend. Mix gently — turkey burgers get tough if overworked.",
-      "Form into 4 equal patties (~175g each). Make a small thumb indent in the center of each to prevent puffing.",
-      "Heat a cast iron skillet or grill pan over medium-high. Cook patties 5–6 min per side until internal temp reaches 74°C.",
-      "Add cheese slice in last minute of cooking. Cover to melt.",
-      "Toast buns cut-side down in the same pan for 1–2 min. Mash avocado with lime and salt.",
-      "Assemble: chipotle yogurt sauce, lettuce, patty with cheese, avocado, tomato, red onion.",
+      {
+        title: "Prep",
+        instructions: [
+          "Wash and dry all produce.",
+          "Slice tomato into rounds. Thinly slice red onion into rings. Separate lettuce leaves.",
+          "Halve avocado, remove pit, and scoop flesh into a small bowl. Mash with a fork. Add a squeeze of lime juice and a pinch of salt — stir to combine.",
+          "Halve remaining limes into wedges.",
+        ],
+      },
+      {
+        title: "Make the chipotle sauce",
+        instructions: [
+          "In a small bowl, combine 100g (½ cup) Greek yogurt, 1 tsp Smoky Chipotle Blend, 1 tsp Dijon mustard, and a squeeze of lime juice.",
+          "Season with a pinch of salt and stir well. Refrigerate until ready to serve.",
+        ],
+      },
+      {
+        title: "Form the patties",
+        instructions: [
+          "In a large bowl, combine 560g ground turkey, 1 egg white, 1 tbsp Smoky Chipotle Blend, ¼ tsp salt, and a few cracks of pepper.",
+          "Mix gently — do not overwork the meat or patties will be tough.",
+          "Divide into 4 equal portions (~140g each). Shape into 4-inch-wide patties, roughly ¾ inch thick. Press a small thumb indent in the center of each patty to prevent puffing during cooking.",
+          "(NOTE: The mixture will feel slightly wet — this is normal for lean turkey.)",
+        ],
+      },
+      {
+        title: "Cook the patties",
+        instructions: [
+          "Heat a large cast-iron skillet or grill pan over medium-high heat. Add ½ tbsp oil.",
+          "When the pan is hot and lightly smoking, add patties. Cook without moving, 5–6 min per side, until deeply golden.",
+          "In the last 1–2 min of cooking, place a slice of cheddar on each patty. Cover the pan with a lid or foil to melt the cheese.",
+          "Transfer patties to a plate. Cover loosely with foil to rest 3 min.",
+          "(TIP: Cook to an internal temperature of 74°C/165°F — use a meat thermometer if you have one.)",
+        ],
+      },
+      {
+        title: "Toast and assemble",
+        instructions: [
+          "Halve burger buns. Place cut-side down in the same pan over medium heat. Toast 1–2 min until lightly golden. Watch closely so they don't burn.",
+          "Spread chipotle sauce on both the top and bottom buns.",
+          "Stack on bottom bun: lettuce, patty with melted cheese, a spoonful of mashed avocado, tomato rounds, and red onion rings.",
+          "Close with top bun. Serve immediately with a lime wedge on the side.",
+        ],
+      },
     ],
     prepTip: "Form raw patties and freeze individually (parchment between each) for up to 3 months — massive time saver. Cook from frozen, just add 3–4 extra minutes per side. Make the chipotle yogurt sauce fresh.",
     helloFreshNote: "Most HelloFresh burgers are a single patty with a generic seasoning packet. Mixing your Chipotle Blend directly into the meat is the move — infuses all the way through vs just surface seasoning.",
@@ -300,14 +398,49 @@ const recipes = [
       { item: "Italian Herb Blend", amount: "2 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Measure out the Greek yogurt and set aside — add it off heat at the end so it doesn't curdle.",
-      "Sauté onion in a large skillet over medium heat 5 min. Add garlic, cook 1 min.",
-      "Add ground beef, break apart and brown well. Drain excess fat.",
-      "Add Italian Herb Blend. Stir and cook 1 minute.",
-      "Pour in marinara sauce. Simmer on low 15 minutes. Stir in spinach in last 2 minutes until wilted. Adjust salt.",
-      "Remove from heat. Stir in Greek yogurt until fully incorporated — adding it off heat keeps it creamy and prevents curdling.",
-      "Meanwhile cook red lentil pasta per package (usually 8–10 min). Drain, toss in sauce.",
-      "Serve topped with grated parmesan.",
+      {
+        title: "Prep",
+        instructions: [
+          "Wash and dry all produce.",
+          "Dice onion finely. Mince 3 garlic cloves.",
+          "Measure out 200g Greek yogurt into a small bowl and set aside at room temperature — cold yogurt is more likely to curdle when stirred in.",
+        ],
+      },
+      {
+        title: "Cook the beef",
+        instructions: [
+          "Heat 1 tbsp oil in a large, deep skillet over medium heat.",
+          "Add diced onion. Cook, stirring occasionally, until soft and translucent, 5 min.",
+          "Add minced garlic. Cook 1 min, stirring constantly.",
+          "Increase heat to medium-high. Add 480g ground beef. Break apart with a wooden spoon and cook until well browned, 7–8 min. Drain excess fat.",
+          "Add 2 tbsp Italian Herb Blend and ½ tsp salt. Stir and cook 1 min until fragrant.",
+        ],
+      },
+      {
+        title: "Make the sauce",
+        instructions: [
+          "Pour in the full 700ml jar of marinara sauce. Stir to combine with the beef.",
+          "Reduce heat to low. Simmer sauce uncovered for 15 min, stirring occasionally.",
+          "In the last 2 min, add 120g spinach and stir until fully wilted.",
+          "Remove pan from heat. Stir in Greek yogurt until fully incorporated and the sauce is creamy. Season with salt to taste.",
+          "(NOTE: Add yogurt off heat only — returning it to high heat will cause it to curdle and turn grainy.)",
+        ],
+      },
+      {
+        title: "Cook the pasta",
+        instructions: [
+          "Bring a large pot of salted water to a boil. Cook 320g red lentil pasta according to package directions, usually 8–10 min. Taste a strand — it should be tender but not mushy.",
+          "Reserve ½ cup (125ml) of pasta water before draining.",
+          "Drain pasta. Add directly to the sauce and toss to coat. Add a splash of reserved pasta water if sauce is too thick.",
+        ],
+      },
+      {
+        title: "Serve",
+        instructions: [
+          "Divide between 4 bowls. Top each with grated parmesan (about 2 tbsp per bowl).",
+          "(TIP: Store pasta and sauce in separate containers if meal prepping — pasta soaks up sauce overnight and goes mushy.)",
+        ],
+      },
     ],
     prepTip: "Red lentil pasta has ~25g protein per 100g dry vs ~13g for regular pasta — that's your biggest protein lever here. Store sauce and pasta separately — pasta absorbs sauce overnight and gets mushy.",
     helloFreshNote: "HelloFresh pasta dishes are often the lowest-protein option on their menu. Red lentil pasta alone nearly doubles the protein of regular pasta. Greek yogurt stirred in off the heat keeps it creamy and adds extra protein without any heavy cream.",
@@ -336,12 +469,45 @@ const recipes = [
       { item: "Korean Umami Blend", amount: "1 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Cook rice per package instructions. Set aside.",
-      "In a large skillet over medium-high, brown ground beef breaking it apart. Drain excess fat.",
-      "Add garlic, cook 1 minute until fragrant.",
-      "Stir in Korean Umami Blend, gochujang, soy sauce, and sesame oil. Cook 2–3 min until sauce thickens and coats the beef.",
-      "Microwave edamame per package directions.",
-      "Assemble bowls: rice, Korean beef, edamame. Top with sliced green onions.",
+      {
+        title: "Prep",
+        instructions: [
+          "Mince 4 garlic cloves. Thinly slice green onions, keeping white and green parts separate.",
+          "Mix the sauce: in a small bowl, whisk together 3 tbsp gochujang, 3 tbsp low-sodium soy sauce, and 1 tbsp sesame oil. Set aside.",
+          "(TIP: Gochujang varies in heat by brand. Start with 2 tbsp if you're heat-sensitive and add more at the end.)",
+        ],
+      },
+      {
+        title: "Cook the rice",
+        instructions: [
+          "Add 300g (1½ cups) jasmine rice and 450ml (scant 2 cups) cold water to a medium pot. Add ¼ tsp salt.",
+          "Bring to a boil over high heat, then reduce to the lowest simmer. Cover tightly and cook 15 min — do not lift the lid.",
+          "Remove from heat. Let steam, covered, 5 min. Fluff with a fork.",
+        ],
+      },
+      {
+        title: "Cook the beef",
+        instructions: [
+          "Heat 1 tbsp oil in a large skillet over medium-high heat.",
+          "Add ground beef. Break apart and cook until well browned, 7–8 min. Drain excess fat.",
+          "Add minced garlic and 1 tbsp Korean Umami Blend. Stir and cook 1 min until fragrant.",
+          "Pour sauce over the beef. Toss to coat and cook, stirring frequently, 2–3 min until sauce thickens and clings to the meat.",
+        ],
+      },
+      {
+        title: "Heat the edamame",
+        instructions: [
+          "Microwave 200g frozen edamame with 2 tbsp water for 2–3 min until heated through. Drain. Season with a pinch of salt.",
+        ],
+      },
+      {
+        title: "Assemble and serve",
+        instructions: [
+          "Divide rice between 4 bowls. Spoon Korean beef alongside the rice.",
+          "Add edamame to each bowl.",
+          "Garnish generously with sliced green onions (green parts). Add extra chili oil or sesame seeds if desired.",
+        ],
+      },
     ],
     prepTip: "Divide into 4 containers. Stores 4 days in fridge. Reheat beef and rice with a splash of water. Edamame can be kept separate and added cold.",
     helloFreshNote: "Inspired by HelloFresh Bulgogi bowls — doubled the beef and used gochujang instead of sweet soy for more complex heat and a real protein lift.",
@@ -371,12 +537,48 @@ const recipes = [
       { item: "Italian Herb Blend", amount: "2 tsp (Mediterranean-style)", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Make tzatziki: combine Greek yogurt, grated & squeezed cucumber, 1 garlic clove, lemon juice, salt. Refrigerate.",
-      "Mix ground beef with Italian Herb Blend, remaining garlic, salt, and pepper.",
-      "Cook ground beef in a skillet over medium-high, breaking apart, until browned (~10 min).",
-      "Warm pitas in a dry pan or oven at 180°C for 2–3 minutes.",
-      "Load each pita: tzatziki spread, lamb, cherry tomatoes, red onion, crumbled feta.",
-      "Wrap tightly and serve immediately.",
+      {
+        title: "Make the tzatziki",
+        instructions: [
+          "Grate the cucumber on the large holes of a box grater. Place grated cucumber in a clean kitchen towel or paper towels and squeeze out as much liquid as possible — this is important or the tzatziki will be watery.",
+          "In a medium bowl, combine 300g Greek yogurt, squeezed cucumber, 1 minced garlic clove, 2 tbsp fresh lemon juice, ½ tsp salt, and a crack of pepper. Stir well.",
+          "Cover and refrigerate for at least 10 min to let flavours develop.",
+          "(TIP: Tzatziki keeps up to 4 days in the fridge and gets better with time.)",
+        ],
+      },
+      {
+        title: "Prep the toppings",
+        instructions: [
+          "Slice 2 medium tomatoes into rounds or half-moons. Season lightly with salt.",
+          "Thinly slice ½ red onion into rings.",
+          "Crumble 80g feta cheese with your fingers.",
+          "Cut remaining lemon into wedges.",
+        ],
+      },
+      {
+        title: "Season and cook the beef",
+        instructions: [
+          "In a large bowl, combine 500g ground beef, 2 tsp Italian Herb Blend, 2 remaining minced garlic cloves, ½ tsp salt, and a few cracks of pepper. Mix until just combined.",
+          "Heat 1 tbsp oil in a large skillet over medium-high heat.",
+          "Add seasoned beef. Break apart and cook, stirring occasionally, until well browned with slightly crispy edges, 8–10 min. Drain excess fat.",
+          "Squeeze a wedge of lemon over the cooked beef and toss to coat.",
+        ],
+      },
+      {
+        title: "Warm the pitas",
+        instructions: [
+          "Heat a dry skillet over medium heat. Add pitas one at a time and warm for 30–60 seconds per side until soft and slightly puffed.",
+          "Alternatively, wrap all 4 pitas in foil and heat in the oven at 180°C/350°F for 5 min.",
+        ],
+      },
+      {
+        title: "Assemble and serve",
+        instructions: [
+          "Spread a generous layer of tzatziki (about 3–4 tbsp) across each warm pita.",
+          "Add a portion of seasoned beef, sliced tomato, red onion rings, and crumbled feta.",
+          "Serve open-faced or wrapped. Eat immediately — pitas go soggy if assembled and left to sit.",
+        ],
+      },
     ],
     prepTip: "Prep lamb and tzatziki separately up to 3 days ahead. Assemble fresh — pitas go soggy if wrapped. Great for a fast assembly lunch.",
     helloFreshNote: "HelloFresh's lamb wraps use a bottled sauce. Swapping to ground beef keeps costs down without sacrificing flavour — homemade tzatziki doubles the protein and takes 2 minutes to make.",
@@ -407,13 +609,46 @@ const recipes = [
       { item: "Korean Umami Blend", amount: "1 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Mix soy sauce, oyster sauce, rice vinegar, and chili oil in a small bowl. Set aside.",
-      "Heat wok or large skillet over high. Add pork, break apart, cook until browned (~7 min). Remove and set aside.",
-      "Add garlic and Korean Umami Blend to the same wok. Stir fry 30 seconds.",
-      "Add broccoli florets and cook 3–4 minutes until tender-crisp.",
-      "Add udon noodles directly from package. Toss and heat through (~3 min).",
-      "Push noodles aside, crack in eggs, scramble briefly, then fold everything together.",
-      "Return pork to wok, pour over sauce, toss to coat. Top with green onions and extra chili oil.",
+      {
+        title: "Prep",
+        instructions: [
+          "Wash and dry all produce.",
+          "Mince 4 garlic cloves. Thinly slice green onions — keep white and green parts separate.",
+          "Cut broccoli into bite-sized florets if not already cut.",
+          "Mix the sauce: in a small bowl, whisk together 4 tbsp soy sauce, 2 tbsp oyster sauce, 1 tbsp rice vinegar, and 2 tbsp chili oil. Set aside.",
+          "(TIP: Have everything prepped and next to the stove before you start cooking — stir fry moves fast.)",
+        ],
+      },
+      {
+        title: "Brown the pork",
+        instructions: [
+          "Heat a large wok or the largest skillet you have over high heat until just smoking.",
+          "Add 600g ground pork. Break apart and cook without stirring for 2 min to get a good sear, then continue breaking apart and cooking until browned, 5–6 min total. Remove pork to a plate.",
+        ],
+      },
+      {
+        title: "Cook aromatics and broccoli",
+        instructions: [
+          "In the same wok over high heat, add ½ tbsp oil.",
+          "Add white parts of green onions, minced garlic, and 1 tbsp Korean Umami Blend. Stir fry 30 seconds until fragrant.",
+          "Add broccoli florets and ¼ cup (60ml) water. Toss and cook until tender-crisp and water has evaporated, 3–4 min.",
+        ],
+      },
+      {
+        title: "Add noodles and eggs",
+        instructions: [
+          "Add 600g udon noodles directly from the package. Toss with tongs to separate and combine with the broccoli. Heat through, 2–3 min.",
+          "Push noodles to one side of the wok. Crack 2 eggs into the empty space. Scramble briefly with a spatula — about 30 seconds — then fold into the noodles before fully set.",
+        ],
+      },
+      {
+        title: "Finish and serve",
+        instructions: [
+          "Return cooked pork to the wok. Pour sauce over everything. Toss vigorously to coat, 1–2 min.",
+          "Taste and adjust heat with extra chili oil if desired.",
+          "Divide between 4 bowls. Top generously with sliced green onions (green parts).",
+        ],
+      },
     ],
     prepTip: "Stores 4 days. Add a splash of water before reheating to loosen noodles. Adjust chili oil per your spice preference.",
     helloFreshNote: "Inspired by HelloFresh's Dan Dan noodles — added eggs for extra protein, swapped in bok choy for volume, and used your Korean Umami Blend for the dry base.",
@@ -441,12 +676,55 @@ const recipes = [
       { item: "Smoky Chipotle Blend", amount: "2 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Preheat oven to 200°C. Toss potato cubes with olive oil and 1 tbsp Chipotle Blend. Roast 25–30 min.",
-      "Rinse lentils, simmer in 2x water with a pinch of salt for 20–25 min until tender. Drain.",
-      "Brown ground beef in a skillet over medium-high. Season with remaining Chipotle Blend. Cook until no pink remains.",
-      "Stir spinach into the beef during last 2 minutes until wilted.",
-      "Make tahini drizzle: whisk tahini, lemon juice, 2 tbsp water, pinch of salt until smooth.",
-      "Assemble bowls: lentils + beef & spinach + roasted sweet potato. Drizzle with tahini.",
+      {
+        title: "Prep",
+        instructions: [
+          "Preheat oven to 220°C/425°F. Line a baking sheet with parchment paper.",
+          "Wash and dry all produce.",
+          "Cut potatoes into ¾-inch cubes — no need to peel. Juice both lemons (you'll need about 4 tbsp total juice). Set aside.",
+        ],
+      },
+      {
+        title: "Roast the potatoes",
+        instructions: [
+          "On the lined baking sheet, toss 480g potato cubes with 2 tbsp olive oil, 1 tbsp Smoky Chipotle Blend, ½ tsp salt, and a few cracks of pepper.",
+          "Spread in a single layer — don't crowd them or they'll steam instead of roast.",
+          "Roast on the middle rack until golden and crispy on the edges, 25–30 min. Flip once halfway through.",
+        ],
+      },
+      {
+        title: "Cook the lentils",
+        instructions: [
+          "Rinse 240g dry lentils under cold water. Add to a medium pot with 600ml (2½ cups) cold water and ¼ tsp salt.",
+          "Bring to a boil over high heat, then reduce to a simmer. Cook uncovered until lentils are just tender but not mushy, 20–22 min.",
+          "Drain any excess water. Season with salt and pepper to taste.",
+        ],
+      },
+      {
+        title: "Cook the beef",
+        instructions: [
+          "Heat 1 tbsp oil in a large skillet over medium-high heat.",
+          "Add 560g ground beef. Break apart and cook until well browned, 7–8 min. Drain excess fat.",
+          "Add remaining 1 tbsp Smoky Chipotle Blend and ½ tsp salt. Stir and cook 1 min.",
+          "Add 160g spinach. Stir until fully wilted, about 2 min. Remove from heat.",
+        ],
+      },
+      {
+        title: "Make tahini drizzle",
+        instructions: [
+          "In a small bowl, whisk together 3 tbsp tahini, 3 tbsp lemon juice, 3 tbsp water, and a pinch of salt until smooth and pourable.",
+          "(TIP: If tahini is too thick, add water 1 tsp at a time. It should drizzle easily off a spoon.)",
+        ],
+      },
+      {
+        title: "Assemble and serve",
+        instructions: [
+          "Divide lentils between 4 bowls as the base.",
+          "Top with beef and spinach mixture, then roasted potato cubes.",
+          "Drizzle generously with tahini sauce.",
+          "(TIP: Store components separately if meal prepping — add tahini drizzle fresh so it doesn't dry out.)",
+        ],
+      },
     ],
     prepTip: "One of the best freezer-friendly meals in this book. Store components separately from tahini (drizzle fresh). Keeps 5 days refrigerated.",
     helloFreshNote: "The beef + lentil combo is rarely seen on HelloFresh but it's a protein powerhouse and significantly cheaper per gram than any single-protein dish.",
@@ -475,12 +753,51 @@ const recipes = [
       { item: "Italian Herb Blend", amount: "2 tsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Preheat oven to 200°C. Line a baking sheet with parchment.",
-      "Combine turkey, egg whites, parmesan, garlic, Italian Herb Blend, breadcrumbs, salt, and pepper. Mix gently.",
-      "Roll into ~20 meatballs (~golf ball size). Place on baking sheet.",
-      "Bake 20–22 minutes until internal temp hits 74°C and tops are lightly golden.",
-      "Heat marinara in a large pot. Add cooked meatballs, simmer 5 minutes.",
-      "Cook spaghetti per package instructions. Drain, toss with meatballs and sauce. Top with parmesan and fresh basil.",
+      {
+        title: "Prep",
+        instructions: [
+          "Preheat oven to 220°C/425°F. Line a large baking sheet with parchment paper.",
+          "Mince 3 garlic cloves. Finely grate 40g parmesan cheese.",
+        ],
+      },
+      {
+        title: "Make the meatballs",
+        instructions: [
+          "In a large bowl, combine 640g ground turkey, 2 egg whites, 40g (¼ cup) grated parmesan, 3 minced garlic cloves, 2 tsp Italian Herb Blend, 3 tbsp breadcrumbs, ½ tsp salt, and a few cracks of pepper.",
+          "Mix gently with your hands until just combined — overmixing makes tough meatballs.",
+          "Scoop and roll into ~20 equal balls (about 2 tbsp of mixture each, roughly golf-ball sized). Place on lined baking sheet with space between each.",
+          "(TIP: Wet your hands lightly before rolling — prevents sticking and gives smoother meatballs.)",
+        ],
+      },
+      {
+        title: "Bake the meatballs",
+        instructions: [
+          "Bake on the middle rack until tops are lightly golden and internal temperature reaches 74°C/165°F, 20–22 min.",
+          "Do not flip during baking.",
+        ],
+      },
+      {
+        title: "Cook the pasta",
+        instructions: [
+          "Bring a large pot of well-salted water to a boil. Cook 240g spaghetti per package directions until al dente (usually 9–11 min).",
+          "Reserve ½ cup (125ml) pasta water before draining. Drain pasta.",
+        ],
+      },
+      {
+        title: "Finish the sauce",
+        instructions: [
+          "Pour the full 700ml jar of marinara sauce into a large pot over medium heat. Bring to a gentle simmer.",
+          "Add baked meatballs to the sauce. Simmer together for 5 min.",
+          "Add drained spaghetti directly to the pot. Toss to coat — add a splash of reserved pasta water if sauce is too thick.",
+        ],
+      },
+      {
+        title: "Serve",
+        instructions: [
+          "Divide between 4 bowls. Top with extra parmesan and fresh basil leaves if using.",
+          "(TIP: Store meatballs and sauce separately from the pasta — pasta soaks up sauce overnight and goes mushy. Combine fresh when reheating.)",
+        ],
+      },
     ],
     prepTip: "Meatballs freeze beautifully — make a double batch and freeze half. Store meatballs in sauce separately from the pasta so it doesn't absorb and go mushy overnight.",
     helloFreshNote: "HelloFresh meatball dishes often use fattier pork blends and smaller portions. Lean turkey + red lentil pasta (optional swap) gives you significantly more protein per serving.",
@@ -509,12 +826,47 @@ const recipes = [
       { item: "Tex Mex Blend", amount: "1 tbsp", cost: "from jar", cat: "spice" },
     ],
     steps: [
-      "Pull the chicken apart by hand — shred both white and dark meat, discard skin and bones. You'll get ~500g of meat.",
-      "Warm beans and corn together in a small pan or microwave. Season with a pinch of Tex Mex Blend.",
-      "Lay a tortilla flat. On one half: spread shredded chicken, bean & corn mix, a handful of cheddar. Fold the tortilla over.",
-      "Cook in a dry skillet over medium heat, 2–3 min per side, pressing down gently until golden and crispy.",
-      "Mix Greek yogurt with a squeeze of lime and a tiny pinch of Tex Mex Blend for a chipotle dipping sauce.",
-      "Slice quesadillas into wedges. Serve with dipping sauce, sliced avocado, and extra lime.",
+      {
+        title: "Prep",
+        instructions: [
+          "Pull rotisserie chicken apart by hand — shred both white and dark meat into bite-sized pieces, discarding skin and bones. You'll get approximately 500g of shredded meat.",
+          "Drain and rinse black beans.",
+          "Halve avocado, remove pit, and scoop flesh into a small bowl. Mash with a fork. Add juice of half a lime and a pinch of salt — stir to combine. Set aside.",
+          "Cut remaining limes into wedges.",
+        ],
+      },
+      {
+        title: "Heat the filling",
+        instructions: [
+          "In a small saucepan over medium heat, combine drained black beans, 100g frozen corn, and a pinch of Tex Mex Blend. Cook, stirring occasionally, until heated through, 3–4 min. Season with salt to taste.",
+          "Alternatively, microwave beans and corn together in a bowl for 2 min, then season.",
+        ],
+      },
+      {
+        title: "Make the dipping sauce",
+        instructions: [
+          "In a small bowl, combine 3–4 tbsp Greek yogurt, a squeeze of lime juice (about 1 tsp), and a pinch of Tex Mex Blend. Stir well.",
+          "Refrigerate until ready to serve.",
+        ],
+      },
+      {
+        title: "Cook the quesadillas",
+        instructions: [
+          "Lay a flour tortilla flat on a cutting board. On one half of the tortilla, layer: a handful of shredded chicken (~125g), 2–3 tbsp bean and corn mixture, and 25g (about 3 tbsp) shredded cheddar.",
+          "Fold the tortilla in half over the filling.",
+          "Heat a large dry skillet over medium heat. Add folded quesadilla. Cook, pressing down gently with a spatula, until golden and crispy on the bottom, 2–3 min.",
+          "Carefully flip and cook the other side until golden and cheese is fully melted, 2 min more.",
+          "Transfer to a cutting board. Repeat with remaining 3 tortillas.",
+          "(TIP: Don't rush with high heat — medium heat gives golden, evenly crispy quesadillas without burning.)",
+        ],
+      },
+      {
+        title: "Serve",
+        instructions: [
+          "Slice each quesadilla into 3–4 wedges with a sharp knife or pizza cutter.",
+          "Serve with chipotle dipping sauce, mashed avocado, and lime wedges on the side.",
+        ],
+      },
     ],
     prepTip: "The whole meal takes about 15 minutes. Rotisserie chicken is the ultimate shortcut — the protein is already cooked, seasoned, and resting. Grab one on your grocery run and dinner is basically done.",
     helloFreshNote: "This is what HelloFresh can't replicate: using a $12 rotisserie chicken across multiple meals (or one generous one). The protein cost-per-gram is excellent and zero effort.",
@@ -921,9 +1273,22 @@ export default function App() {
                 <div style={{ background: "white", borderRadius: "12px", padding: "18px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", marginBottom: "12px" }}>
                   <div style={{ fontSize: "14px", fontWeight: "700", marginBottom: "12px" }}>👨‍🍳 Instructions</div>
                   {selectedRecipe.steps.map((step, i) => (
-                    <div key={i} style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
-                      <div style={{ minWidth: "22px", height: "22px", borderRadius: "50%", background: selectedRecipe.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", flexShrink: 0 }}>{i + 1}</div>
-                      <div style={{ fontSize: "12px", color: "#444", lineHeight: "1.55", paddingTop: "3px" }}>{step}</div>
+                    <div key={i} style={{ background: "white", borderRadius: "12px", padding: isMobile ? "14px 16px" : "16px 20px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
+                      <div style={{ fontWeight: "700", fontSize: isMobile ? "13px" : "14px", color: "#1a1a1a", marginBottom: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ background: selectedRecipe.color, color: "white", borderRadius: "50%", width: "22px", height: "22px", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: "700", flexShrink: 0 }}>{i + 1}</span>
+                        {step.title}
+                      </div>
+                      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "6px" }}>
+                        {step.instructions.map((inst, j) => {
+                          const isTip = inst.startsWith("(TIP:") || inst.startsWith("(NOTE:");
+                          return (
+                            <li key={j} style={{ fontSize: isMobile ? "13px" : "14px", color: isTip ? "#92400e" : "#444", lineHeight: "1.55", display: "flex", gap: "8px", background: isTip ? "#fef3c7" : "transparent", borderRadius: isTip ? "6px" : "0", padding: isTip ? "6px 8px" : "0", fontStyle: isTip ? "italic" : "normal" }}>
+                              {!isTip && <span style={{ color: selectedRecipe.color, fontWeight: "700", flexShrink: 0, marginTop: "1px" }}>•</span>}
+                              <span>{inst}</span>
+                            </li>
+                          );
+                        })}
+                      </ul>
                     </div>
                   ))}
                 </div>
